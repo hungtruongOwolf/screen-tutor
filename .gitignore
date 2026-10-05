@@ -22,3 +22,4 @@ infra/cdk.out/
 cdk.out/
 *.egg-info/
 infra/node_modules/
+release-public/

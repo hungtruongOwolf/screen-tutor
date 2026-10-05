@@ -13,6 +13,8 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
+// --out=release-public: another folder for the files (so a build for the public does not overwrite another).
+const outDir = process.argv.find((a) => a.startsWith("--out="))?.slice(6) ?? "";
 const root = resolve(import.meta.dirname, "..");
 
 function readEnv(path) {
@@ -40,7 +42,7 @@ writeFileSync(join(root, "build", "defaults.json"), JSON.stringify({ EXPLAIN_BAC
 
 for (const [command, args] of [
   ["node", ["build.mjs"]],
-  ["npx", ["electron-builder", "--win", "--publish", "never"]],
+  ["npx", ["electron-builder", "--win", "--publish", "never", ...(outDir ? [`--config.directories.output=${outDir}`] : [])]],
 ]) {
   const run = spawnSync(command, args, { cwd: root, stdio: "inherit", shell: true });
   if (run.status !== 0) process.exit(run.status ?? 1);
