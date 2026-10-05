@@ -54,6 +54,8 @@ The backend is stateless: the desktop app keeps the conversation, the goal, the 
 
 **Security and failure handling (Agentic Vision).** The backend requires a bearer token and rate-limits per client; both overlay and chat are excluded from screen captures; only the local watcher and voice windows may capture; no audio leaves the computer (speech recognition and synthesis are local); the model output is validated against the contract and an invalid answer is retried once, then reported as an error; a slow model is hedged with a second one after 4 s; a screen that changes mid-turn marks old drawings stale; the loop pauses itself after three off-track answers, 25 automatic turns or 15 idle minutes.
 
+**Task effectiveness:** `backend/evaluation/tasks_report.md` runs the guide loop (question, then an automatic turn at every page change, with goal, conversation and drawings) on three pages of a console: 9 of 9 multi-screen tasks completed with each of the two models, including leading the learner back after a wrong click; with a vaguely worded goal the first run completed only 3 of 9 (the model took a different, valid path), which the report explains.
+
 **Measured on AWS:** Graviton is 22 % cheaper per turn than x86 for the compute part and slightly faster: `backend/evaluation/benchmark.md` (method included, `backend/tools/benchmark.py`).
 
 ## Install (one file, two steps)

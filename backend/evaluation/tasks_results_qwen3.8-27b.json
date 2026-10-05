@@ -1,0 +1,317 @@
+[
+  {
+    "scenario": "from-the-dashboard",
+    "repeat": 0,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console1.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key) in acmecloud.",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 3.65,
+        "caption": "To create a new user that can use an access key, start in the identity area. Click 'Access & Identity' in the left sidebar under SECURITY."
+      },
+      {
+        "turn": 2,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key) in acmecloud.",
+        "goal_stated": null,
+        "steps": 1,
+        "seconds": 2.79,
+        "caption": "You're in the right place \u2014 the Users list. Now click 'Create user' in the top right to start a new user."
+      },
+      {
+        "turn": 3,
+        "frame": "console3.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key) in acmecloud.",
+        "goal_stated": null,
+        "steps": 2,
+        "seconds": 5.68,
+        "caption": "First, type a name for the new user in the User name box (letters, numbers and dashes only)."
+      }
+    ]
+  },
+  {
+    "scenario": "from-the-dashboard",
+    "repeat": 1,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console1.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key).",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 3.4,
+        "caption": "Start in the left menu under SECURITY. Click 'Access & Identity' to open the user management area."
+      },
+      {
+        "turn": 2,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key).",
+        "goal_stated": null,
+        "steps": 1,
+        "seconds": 2.81,
+        "caption": "You're in the right place \u2014 this is the user list. Click 'Create user' to start adding a new user."
+      },
+      {
+        "turn": 3,
+        "frame": "console3.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key).",
+        "goal_stated": null,
+        "steps": 4,
+        "seconds": 16.04,
+        "caption": "First, type a name for the new user in the User name box (letters, numbers and dashes only)."
+      }
+    ]
+  },
+  {
+    "scenario": "from-the-dashboard",
+    "repeat": 2,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console1.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key) in acmecloud.",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 3.63,
+        "caption": "To create a new user that can use an access key, start in the identity area. Click 'Access & Identity' in the left sidebar under SECURITY."
+      },
+      {
+        "turn": 2,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key) in acmecloud.",
+        "goal_stated": null,
+        "steps": 1,
+        "seconds": 2.81,
+        "caption": "You're in the right place \u2014 the Users list. Now click 'Create user' in the top right to start a new user."
+      },
+      {
+        "turn": 3,
+        "frame": "console3.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key) in acmecloud.",
+        "goal_stated": null,
+        "steps": 2,
+        "seconds": 5.66,
+        "caption": "First, type a name for the new user in the User name box (letters, numbers and dashes only)."
+      }
+    ]
+  },
+  {
+    "scenario": "starts-on-the-user-list",
+    "repeat": 0,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 3.08,
+        "caption": "You're on the right page. Click the 'Create user' button in the top-right of the Users list to start adding a new user."
+      },
+      {
+        "turn": 2,
+        "frame": "console3.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": null,
+        "steps": 4,
+        "seconds": 6.57,
+        "caption": "The form is open. First type a name for the user in the User name box (letters, numbers and dashes only)."
+      }
+    ]
+  },
+  {
+    "scenario": "starts-on-the-user-list",
+    "repeat": 1,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 2.78,
+        "caption": "You're on the right page. Click the 'Create user' button in the top-right of the Users list to start adding a new user."
+      },
+      {
+        "turn": 2,
+        "frame": "console3.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": null,
+        "steps": 4,
+        "seconds": 16.42,
+        "caption": "Type a name for the new user in the User name box (letters, numbers and dashes only)."
+      }
+    ]
+  },
+  {
+    "scenario": "starts-on-the-user-list",
+    "repeat": 2,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key).",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 3.07,
+        "caption": "You're on the right page. Click the blue 'Create user' button in the top-right of the Users list to start a new user."
+      },
+      {
+        "turn": 2,
+        "frame": "console3.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key).",
+        "goal_stated": null,
+        "steps": 1,
+        "seconds": 7.54,
+        "caption": "The Create user form is open. Fill it top to bottom: type a user name, tick Programmatic access, choose a permission, then continue. The access key will be shown only once later, so save it the moment it appears."
+      }
+    ]
+  },
+  {
+    "scenario": "goes-back",
+    "repeat": 0,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 2.91,
+        "caption": "You're on the right page. Click the blue 'Create user' button in the top-right of the user list to start adding a new user."
+      },
+      {
+        "turn": 2,
+        "frame": "console1.png",
+        "pointed": true,
+        "progress": "off_track",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": null,
+        "steps": 1,
+        "seconds": 3.35,
+        "caption": "You've ended up on the Dashboard instead of the user list. Click 'Access & Identity' in the left menu to get back to user management."
+      }
+    ]
+  },
+  {
+    "scenario": "goes-back",
+    "repeat": 1,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 2.48,
+        "caption": "You're on the right page. Click the blue 'Create user' button in the top-right of the user list to start adding a new user."
+      },
+      {
+        "turn": 2,
+        "frame": "console1.png",
+        "pointed": true,
+        "progress": "off_track",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key)",
+        "goal_stated": null,
+        "steps": 1,
+        "seconds": 3.42,
+        "caption": "You've landed on the Dashboard instead of the user page. Click 'Access & Identity' in the left menu to get back to user management."
+      }
+    ]
+  },
+  {
+    "scenario": "goes-back",
+    "repeat": 2,
+    "success": true,
+    "turns": [
+      {
+        "turn": 1,
+        "frame": "console2.png",
+        "pointed": true,
+        "progress": "continue",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key).",
+        "goal_stated": true,
+        "steps": 1,
+        "seconds": 2.62,
+        "caption": "You're on the right page. Click the blue 'Create user' button in the top-right of the user list to start creating the new user."
+      },
+      {
+        "turn": 2,
+        "frame": "console1.png",
+        "pointed": true,
+        "progress": "off_track",
+        "progress_ok": true,
+        "goal": "Create a new user with programmatic access (an access key).",
+        "goal_stated": null,
+        "steps": 1,
+        "seconds": 2.84,
+        "caption": "It looks like you ended up on the Dashboard instead of the user page. Click 'Access & Identity' in the left menu to get back to user management."
+      }
+    ]
+  }
+]

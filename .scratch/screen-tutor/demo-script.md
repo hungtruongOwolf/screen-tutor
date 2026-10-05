@@ -1,6 +1,6 @@
 # Demo script (two flows, about 2 minutes each)
 
-Record at 1080p. Backend running (local or the AWS URL), desktop app started with `npm start`. The chat panel sits bottom right; both windows are hidden from the capture, so only the drawings show on the video. Record the screen, not the panel alone.
+Record at 1080p. Backend running (local or the AWS URL), desktop app started with `npm start`. The chat panel sits bottom right. The tutor's windows are hidden from screen captures by default, so a recorder (OBS, Game Bar) would show none of it: press **Ctrl+Shift+R** (recording mode) before recording, and again after. Do a 10 second test recording first; at each question the tutor's windows blink for half a second (the model's capture must not contain the drawings).
 
 ## Flow 1: learn (why is the Pythagorean theorem true?)
 

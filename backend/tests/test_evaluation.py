@@ -122,3 +122,16 @@ def test_the_triangle_cases_are_scored_on_the_segment_not_a_box():
 
     assert score_answer(case, good).pointed is True
     assert score_answer(case, wrong).pointed is False
+
+
+def test_the_task_scenarios_use_screens_that_exist_and_have_targets():
+    from evaluation.tasks import SAMPLES, SCENARIOS
+
+    assert SCENARIOS
+    for scenario in SCENARIOS:
+        assert scenario.turns[0].question  # the first turn is the learner's request
+        for turn in scenario.turns:
+            assert (SAMPLES / turn.frame).exists(), turn.frame
+            assert turn.targets
+            if not turn.question:
+                assert turn.progress  # an automatic turn is judged on the verdict too
