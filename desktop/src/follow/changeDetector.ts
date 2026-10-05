@@ -119,7 +119,7 @@ export class ChangeDetector {
   private lastMotion = 0;
   private moving = false;
   // What the last frame looked like to the detector (for diagnosing a screen that does not behave).
-  stats = { cells: 0, active: 0, block: 0, motionBlock: 0, masked: 0, moving: false, stillMs: 0 };
+  stats = { cells: 0, active: 0, block: 0, motionBlock: 0, masked: 0, moving: false, stillMs: 0, at: "" };
 
   constructor(private readonly options: DetectorOptions = DEFAULT_OPTIONS) {}
 
@@ -195,6 +195,7 @@ export class ChangeDetector {
     }
     this.previous = frame;
     const mostChanged = changedInBlock.reduce((m, n) => Math.max(m, n), 0);
+    const peak = changedInBlock.indexOf(mostChanged);
     // Only movement where the change is counts: a block that carries it, or touches one that does.
     // Flicker elsewhere on the screen is none of our business.
     const carries = (c: number, r: number) =>
@@ -207,7 +208,7 @@ export class ChangeDetector {
         if (tracked) mostMoved = Math.max(mostMoved, movedInBlock[r * columns + c] as number);
       }
     }
-    this.stats = { cells: fromBaseline, active, block: mostChanged, motionBlock: mostMoved, masked: frame.gray.length - active, moving: this.moving, stillMs: Math.round(now - this.lastMotion) };
+    this.stats = { cells: fromBaseline, active, block: mostChanged, motionBlock: mostMoved, masked: frame.gray.length - active, moving: this.moving, stillMs: Math.round(now - this.lastMotion), at: mostChanged > 0 ? `${Math.round(((peak % columns) + 0.5) / columns * 100)}%,${Math.round(((Math.floor(peak / columns)) + 0.5) / rows * 100)}%` : "" };
     if (active === 0) return [];
     const share = fromBaseline / active;
     this.peakShare = Math.max(this.peakShare, share);

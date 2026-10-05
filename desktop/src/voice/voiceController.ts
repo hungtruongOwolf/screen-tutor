@@ -133,7 +133,8 @@ export class VoiceController {
     this.send({ type: "gate", open: false });
     this.ui("speaking", text, "Say “stop” or press Ctrl+Shift+S to interrupt");
     return new Promise<void>((resolve) => {
-      const timer = setTimeout(() => this.finishSpeech(id), 45_000); // never wait for ever
+      // Never wait for ever: about as long as it takes to say it (and a little more), at most 45 s.
+      const timer = setTimeout(() => this.finishSpeech(id), Math.min(45_000, 5_000 + text.length * 110));
       this.waiters.set(id, () => {
         clearTimeout(timer);
         resolve();

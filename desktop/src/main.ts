@@ -1,11 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { app, BrowserWindow, desktopCapturer, globalShortcut, ipcMain, screen, session } from "electron";
+import { app, BrowserWindow, desktopCapturer, globalShortcut, ipcMain, screen, session, shell } from "electron";
 import { BackendError, explainTurnStream, narrate } from "./backendClient";
 import { captureScreen } from "./capture";
 import { Conversation } from "./chat/conversation";
 import { loadConfig } from "./config";
+import { installConsoleLog, logDirectory } from "./log";
 import type { Canvas, OverlayUpdate, PanelEvent, Progress, Region, StreamEvent } from "./contract";
 import { POINTER_KINDS } from "./contract";
 import type { WatcherMessage } from "./follow/watcher";
@@ -17,6 +18,7 @@ import { findPiper } from "./voice/piper";
 import { installVoice } from "./voice/installer";
 import { findVoice, type VoicePaths } from "./voice/whisper";
 
+installConsoleLog(); // everything printed is also kept in %APPDATA%\screen-tutor\logs\app.log
 const config = loadConfig(join(__dirname, ".."));
 const sessionId = randomUUID();
 
@@ -49,6 +51,7 @@ const narrations = new Map<number, Promise<string | undefined>>();
 const NARRATION_WAIT_MS = 2500; // longer than this and the caption itself is read
 const overlayWaiters = new Map<number, () => void>();
 let rebaseTimer: NodeJS.Timeout | undefined;
+let changePending = false; // the page changed while a turn was running: look again when it ends
 let drawing = false; // the overlay is animating a step (recording mode keeps the watcher quiet meanwhile)
 const typedWaiters = new Map<number, () => void>();
 
@@ -439,8 +442,9 @@ function handle(event: StreamEvent): void {
     finished = { sources: event.sources, followUps: event.follow_ups ?? [] };
     if (event.goal) goal = event.goal;
     lastProgress = event.progress;
-  } else if (event.event === "error" && player.steps.length === 0) {
-    emit({ type: "error", text: `The model could not answer (${event.status}): ${event.detail}` });
+  } else if (event.event === "error") {
+    console.error(`stream error event: ${event.status} ${event.detail}`);
+    emit({ type: "error", text: player.steps.length === 0 ? `The model could not answer (${event.status}): ${event.detail}` : `The rest of the answer failed (${event.status}). What you see is what came through.` });
   }
 }
 
@@ -516,40 +520,56 @@ async function ask(text: string, trigger: "user" | "screen_changed" = "user"): P
   emit({ type: "status", text: "Looking at your screen" });
   const controller = new AbortController();
   abort = controller;
+  const startedAt = Date.now();
 
   try {
     // The panel and the overlay are hidden from captures, so this is the screen as the
     // learner sees it, without the tutor's own windows.
     void startWatching().then(() => watchSend({ type: "mark" }));
     const capture = await captureWithoutOurWindows();
+    console.log(`turn ${turn + 1} start: trigger=${trigger} goal=${goal ? "yes" : "no"} history=${history.length} shapes=${canvas.shapes.length} capture=${capture.meta.width}x${capture.meta.height} ${Math.round(capture.image.length / 1024)} KB (${Date.now() - startedAt} ms to capture)`);
     player.begin();
     // The drawing on screen stays and the backend moves it onto this capture (or
     // drops what no longer fits); the regions of the last capture are sent back so
     // it can tell which is which.
-    await explainTurnStream(
-      config.backendUrl,
-      config.accessToken,
-      {
-        session_id: sessionId,
-        question,
-        image_base64: capture.image.toString("base64"),
-        capture: capture.meta,
-        canvas,
-        previous_regions: regions,
-        turn,
-        history,
-        goal,
-        trigger,
-      },
-      handle,
-      controller.signal,
-    );
+    const request = {
+      session_id: sessionId,
+      question,
+      image_base64: capture.image.toString("base64"),
+      capture: capture.meta,
+      canvas,
+      previous_regions: regions,
+      turn,
+      history,
+      goal,
+      trigger,
+    };
+    // A dropped connection or a busy server (5xx) before anything came back is tried once more.
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await explainTurnStream(config.backendUrl, config.accessToken, request, handle, controller.signal);
+        break;
+      } catch (error) {
+        const transient = error instanceof BackendError && /Cannot reach|answered 5\d\d/.test(error.message);
+        console.error(`turn ${turn + 1} attempt ${attempt} failed after ${player.steps.length} steps: ${(error as Error).message}`);
+        if (attempt >= 2 || !transient || player.steps.length > 0 || controller.signal.aborted) throw error;
+        emit({ type: "status", text: "Trying again" });
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+    }
+    console.log(`turn ${turn + 1} done: ${player.steps.length} steps, progress=${lastProgress ?? "-"}, ${Date.now() - startedAt} ms`);
     turn += 1;
     if (abort === controller) afterTurn();
   } catch (error) {
-    if (!controller.signal.aborted && player.steps.length === 0) {
-      emit({ type: "error", text: describe(error) });
-      voice?.say("Sorry, I could not get an answer.");
+    console.error(`turn ${turn + 1} failed after ${player.steps.length} steps (${Date.now() - startedAt} ms): ${(error as Error).stack ?? error}`);
+    if (!controller.signal.aborted) {
+      if (player.steps.length === 0) {
+        emit({ type: "error", text: describe(error) });
+        voice?.say("Sorry, I could not get an answer.");
+      } else {
+        // Part of the answer was shown, then it broke off: say so, and carry on following.
+        emit({ type: "auto", text: "The answer was cut short (the connection dropped). I will look again when the screen changes." });
+      }
     }
   } finally {
     if (abort === controller) {
@@ -557,6 +577,11 @@ async function ask(text: string, trigger: "user" | "screen_changed" = "user"): P
       abort = undefined;
       voice?.setThinking(false);
       if (recording && goal && following) armWatcher(); // also when the turn failed
+      // A change that came while this turn was running is looked at now.
+      if (changePending) {
+        changePending = false;
+        if (following && goal) setTimeout(fireAuto, 800);
+      }
       emit({ type: "busy", value: false });
       emit({ type: "status", text: null });
       conversation.addAssistant(player.steps.map((s) => s.caption));
@@ -688,7 +713,12 @@ function markStale(): void {
 
 // The change has settled: look at the new page and say what comes next.
 function fireAuto(): void {
-  if (!following || !goal || busy) return;
+  if (!following || !goal) return;
+  if (busy) {
+    changePending = true; // do not lose it: the turn that is running was written for the page before
+    console.log("watcher: change during a turn, will look again when it ends");
+    return;
+  }
   touch();
   if (autoTurns >= MAX_AUTO_TURNS) {
     following = false;
@@ -952,6 +982,7 @@ app.whenReady().then(() => {
     globalShortcut.register(debug, () => send("overlay:toggle-debug")),
     globalShortcut.register(quit, () => app.quit()),
     globalShortcut.register(config.hotkeys.record, () => setRecording(!recording)),
+    globalShortcut.register(config.hotkeys.log, () => void shell.openPath(logDirectory())),
   ];
   if (registered.includes(false)) {
     console.error("Some hotkeys could not be registered (already in use by another app?)");

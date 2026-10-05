@@ -61,7 +61,7 @@ function tick(): void {
   latest = frame;
   if (!armed) return;
   const at = pointer ? { x: pointer.x * frame.width, y: pointer.y * frame.height } : undefined;
-  for (const event of detector.update(frame, performance.now(), at)) window.watcherApi.send({ kind: event });
+  for (const event of detector.update(frame, performance.now(), at)) window.watcherApi.send({ kind: event, detail: JSON.stringify(detector.stats) }); // what it saw, for the log
   frames += 1;
   if (debugging && frames % 8 === 0) window.watcherApi.send({ kind: "debug", detail: JSON.stringify(detector.stats) });
 }

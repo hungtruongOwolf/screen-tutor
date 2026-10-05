@@ -49,6 +49,8 @@ export interface Config {
     quit: string;
     // Recording mode: the tutor's windows can be seen by a screen recorder (for a demo video).
     record: string;
+    // Opens the folder with the log file (what happened in this run).
+    log: string;
     next: string;
     previous: string;
   };
@@ -86,6 +88,7 @@ export function loadConfig(projectRoot: string): Config {
       debug: "CommandOrControl+Shift+D",
       quit: "CommandOrControl+Shift+Q",
       record: "CommandOrControl+Shift+R",
+      log: "CommandOrControl+Shift+L",
       // Ctrl+Shift+. and Ctrl+Shift+, are Ctrl+> and Ctrl+< on a US keyboard.
       next: "CommandOrControl+Shift+.",
       previous: "CommandOrControl+Shift+,",
