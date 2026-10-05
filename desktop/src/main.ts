@@ -49,6 +49,7 @@ const narrations = new Map<number, Promise<string | undefined>>();
 const NARRATION_WAIT_MS = 2500; // longer than this and the caption itself is read
 const overlayWaiters = new Map<number, () => void>();
 let rebaseTimer: NodeJS.Timeout | undefined;
+let drawing = false; // the overlay is animating a step (recording mode keeps the watcher quiet meanwhile)
 const typedWaiters = new Map<number, () => void>();
 
 // What the stream said once it ended, kept until the steps have been played so the
@@ -269,8 +270,16 @@ async function showStep(index: number, animate: boolean): Promise<void> {
         resolve();
       });
     });
-  if (animate) holdWatcher();
+  if (animate) {
+    drawing = true;
+    holdWatcher();
+  }
   const drawn = wait(overlayWaiters);
+  void drawn.then(() => {
+    if (!animate) return;
+    drawing = false;
+    rebaseAfterDrawing(); // measure again from the finished drawing
+  });
   const typed = animate ? wait(typedWaiters) : Promise.resolve();
   const spoken = animate && voice?.speaking ? speakStep(index, step.caption) : Promise.resolve();
   emit({
@@ -349,6 +358,17 @@ function holdWatcher(): void {
   watchSend({ type: "hold" });
 }
 
+// Watch for change from the screen as it is now. In recording mode the tutor's own drawing is part of the
+// screen, so the baseline is taken only once the drawing is finished, never in the middle of it.
+function armWatcher(): void {
+  if (!recording) {
+    watchSend({ type: "arm" });
+    return;
+  }
+  holdWatcher();
+  if (!drawing) rebaseAfterDrawing();
+}
+
 function rebaseAfterDrawing(): void {
   if (!recording) return;
   if (rebaseTimer) clearTimeout(rebaseTimer);
@@ -366,6 +386,7 @@ function rebaseAfterDrawing(): void {
 async function captureWithoutOurWindows(): Promise<Awaited<ReturnType<typeof captureScreen>>> {
   if (!recording) return captureScreen();
   const windows = ownWindows();
+  holdWatcher(); // the blink is not a page change (the end of the turn measures again)
   for (const window of windows) window.setOpacity(0);
   try {
     return await captureScreen();
@@ -535,6 +556,7 @@ async function ask(text: string, trigger: "user" | "screen_changed" = "user"): P
       busy = false;
       abort = undefined;
       voice?.setThinking(false);
+      if (recording && goal && following) armWatcher(); // also when the turn failed
       emit({ type: "busy", value: false });
       emit({ type: "status", text: null });
       conversation.addAssistant(player.steps.map((s) => s.caption));
@@ -567,7 +589,7 @@ function afterTurn(): void {
   }
   // From the screen as the answer was started (so anything the learner did while it was
   // being written is noticed) or, failing that, as it is now.
-  watchSend({ type: "arm" });
+  armWatcher();
 }
 
 function watchSend(message: WatcherMessage): void {
@@ -659,8 +681,6 @@ function onWatch(message: { kind: string; detail?: string }): void {
 
 // The page changed: marks that pointed at the old page go (what builds up stays).
 function markStale(): void {
-  holdWatcher();
-  rebaseAfterDrawing();
   player.stop();
   canvas = { shapes: canvas.shapes.filter((s) => !(POINTER_KINDS.includes(s.kind) && !s.keep)) };
   send("overlay:stale", canvas);
@@ -685,7 +705,7 @@ function toggleFollow(): void {
   following = !following;
   offTrack = 0;
   emit({ type: "task", goal, following });
-  if (following) watchSend({ type: "arm" }); // start from the screen as it is now
+  if (following) armWatcher(); // start from the screen as it is now
 }
 
 // Activity: the idle clock starts again. A task nobody has touched for a long while stops being followed.
@@ -751,7 +771,7 @@ function setFollowing(on: boolean): void {
   following = on;
   offTrack = 0;
   emit({ type: "task", goal, following });
-  if (on) watchSend({ type: "arm" });
+  if (on) armWatcher();
 }
 
 function openChat(): void {
