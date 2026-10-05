@@ -1,0 +1,105 @@
+<!doctype html>
+<!-- A made-up cloud console ("Acme Cloud") used as a sample for the guide mode: three
+     screens in a row (dashboard, users, create user). Open it with #1, #2 or #3 and
+     take a 1280x720 screenshot. Nothing here is a real product. -->
+<meta charset="utf-8" />
+<title>Acme Cloud console</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #f3f4f7; color: #1b1f2a; font: 14px/1.4 "Segoe UI", system-ui, sans-serif; }
+  .top { height: 52px; background: #1d2433; color: #fff; display: flex; align-items: center; gap: 18px; padding: 0 18px; }
+  .logo { font-weight: 800; letter-spacing: .3px; font-size: 17px; }
+  .logo b { color: #5eb0ff; }
+  .search { flex: 1; max-width: 420px; background: #2c3550; border: 0; border-radius: 6px; padding: 8px 12px; color: #cfd6ea; }
+  .top .pill { background: #2c3550; border-radius: 6px; padding: 6px 12px; color: #dfe6fb; }
+  .layout { display: flex; height: calc(720px - 52px); }
+  nav { width: 220px; background: #fff; border-right: 1px solid #dde1ea; padding: 14px 0; }
+  nav a { display: block; padding: 10px 22px; color: #3a4258; text-decoration: none; }
+  nav a.on { background: #e8f1ff; color: #0b57d0; font-weight: 600; border-left: 3px solid #0b57d0; padding-left: 19px; }
+  nav .group { padding: 14px 22px 4px; font-size: 11px; letter-spacing: .8px; color: #8890a6; text-transform: uppercase; }
+  main { flex: 1; padding: 24px 30px; overflow: hidden; }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  .sub { color: #5b6378; margin-bottom: 18px; }
+  .row { display: flex; gap: 16px; }
+  .card { background: #fff; border: 1px solid #dde1ea; border-radius: 10px; padding: 16px 18px; flex: 1; }
+  .card .big { font-size: 28px; font-weight: 700; margin-top: 6px; }
+  .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .btn { border: 1px solid #b9c0d4; background: #fff; border-radius: 6px; padding: 8px 16px; font: inherit; font-weight: 600; color: #1b1f2a; }
+  .btn.primary { background: #0b57d0; border-color: #0b57d0; color: #fff; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #dde1ea; border-radius: 10px; overflow: hidden; }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid #eceff5; }
+  th { background: #f7f8fb; color: #5b6378; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+  .tabs { display: flex; gap: 22px; border-bottom: 1px solid #dde1ea; margin-bottom: 18px; }
+  .tabs a { padding: 8px 2px; color: #5b6378; }
+  .tabs a.on { color: #0b57d0; font-weight: 600; border-bottom: 3px solid #0b57d0; }
+  .form { background: #fff; border: 1px solid #dde1ea; border-radius: 10px; padding: 20px 22px; }
+  label { display: block; font-weight: 600; margin: 14px 0 6px; }
+  .hint { color: #5b6378; font-weight: 400; font-size: 12.5px; }
+  input[type=text] { width: 380px; padding: 9px 12px; border: 1px solid #b9c0d4; border-radius: 6px; font: inherit; }
+  .opt { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+  .banner { background: #fff7e0; border: 1px solid #f2d27a; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; color: #6b5200; }
+  .footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+  .screen { display: none; }
+  .screen:target, .screen.on { display: block; }
+</style>
+
+<div class="top"><span class="logo">acme<b>cloud</b></span><input class="search" placeholder="Search services, docs and resources" /><span class="pill">Region: us-east-1</span><span class="pill" style="margin-left:auto">ops-team</span></div>
+<div class="layout">
+  <nav>
+    <div class="group">Core</div>
+    <a id="n-dash" href="#1">Dashboard</a>
+    <a>Compute</a>
+    <a>Storage</a>
+    <a>Networking</a>
+    <div class="group">Security</div>
+    <a id="n-access" href="#2">Access &amp; Identity</a>
+    <a>Secrets</a>
+    <div class="group">Account</div>
+    <a>Billing</a>
+    <a>Support</a>
+  </nav>
+  <main>
+    <section class="screen" id="s1">
+      <h1>Dashboard</h1><div class="sub">Overview of your account in us-east-1</div>
+      <div class="row">
+        <div class="card">Active services<div class="big">7</div></div>
+        <div class="card">Month-to-date cost<div class="big">$128.40</div></div>
+        <div class="card">Open alerts<div class="big">2</div></div>
+      </div>
+      <div class="head" style="margin-top:22px"><b>Recent activity</b><button class="btn">View all</button></div>
+      <table><tr><th>Event</th><th>Resource</th><th>When</th></tr>
+        <tr><td>Instance started</td><td>web-01</td><td>2 min ago</td></tr>
+        <tr><td>Policy updated</td><td>ci-deploy</td><td>1 h ago</td></tr>
+        <tr><td>Bucket created</td><td>assets-prod</td><td>Yesterday</td></tr></table>
+    </section>
+    <section class="screen" id="s2">
+      <h1>Access &amp; Identity</h1><div class="sub">Manage who and what can use your account</div>
+      <div class="tabs"><a class="on">Users</a><a>Groups</a><a>Roles</a><a>Policies</a></div>
+      <div class="head"><b>Users (2)</b><div><button class="btn">Delete</button> <button class="btn primary">Create user</button></div></div>
+      <table><tr><th>User name</th><th>Access</th><th>Created</th></tr>
+        <tr><td>admin</td><td>Console</td><td>Mar 4, 2026</td></tr>
+        <tr><td>ci-bot</td><td>Programmatic</td><td>Aug 19, 2026</td></tr></table>
+    </section>
+    <section class="screen" id="s3">
+      <h1>Create user</h1><div class="sub">Step 1 of 2: details and permissions</div>
+      <div class="banner">Access keys are shown only once, right after they are created. Store them somewhere safe.</div>
+      <div class="form">
+        <label>User name <span class="hint">Letters, numbers and dashes only</span></label>
+        <input type="text" value="" placeholder="for example my-app" />
+        <label>Access type</label>
+        <div class="opt"><input type="checkbox" /> Console access <span class="hint">sign in with a password</span></div>
+        <div class="opt"><input type="checkbox" /> Programmatic access <span class="hint">creates an access key for code and the CLI</span></div>
+        <label>Permissions</label>
+        <div class="opt"><input type="radio" name="p" /> ReadOnlyAccess</div>
+        <div class="opt"><input type="radio" name="p" /> BillingAccess</div>
+        <div class="opt"><input type="radio" name="p" /> AdministratorAccess <span class="hint">full control: avoid for apps</span></div>
+        <div class="footer"><button class="btn">Cancel</button><button class="btn primary">Next: review</button></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+  var n = (location.hash || "#1").slice(1);
+  document.getElementById("s" + n).classList.add("on");
+  document.getElementById(n === "1" ? "n-dash" : "n-access").classList.add("on");
+</script>

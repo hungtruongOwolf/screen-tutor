@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>screen-tutor playground</title>
+  <link rel="stylesheet" href="/static/chat.css" />
+  <style>
+    :root {
+      --bg: #ffffff; --panel: #f4f5f7; --text: #15161a; --muted: #5b6070; --line: #d9dce3;
+      --accent: #d6281c; --ok: #1a7f37;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #14151a; --panel: #1d1f27; --text: #eceef3; --muted: #9aa0b2; --line: #343848; --accent: #ff5a4d; --ok: #4cc26a; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 "Segoe UI", system-ui, sans-serif; }
+    header { padding: 20px 16px 8px; max-width: 1280px; margin: 0 auto; }
+    h1 { margin: 0 0 4px; font-size: 1.5rem; }
+    header p { margin: 0; color: var(--muted); max-width: 80ch; }
+    main { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 20px; max-width: 1280px; margin: 0 auto; padding: 12px 16px 40px; align-items: start; }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+    .box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    button { font: inherit; }
+    .plain { border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+    .plain:hover:not(:disabled) { border-color: var(--accent); }
+    .plain:disabled { opacity: .5; cursor: default; }
+
+    #drop { border: 2px dashed var(--line); border-radius: 12px; padding: 18px; color: var(--muted); }
+    #drop.over { border-color: var(--accent); }
+    #drop h2 { margin: 0 0 4px; font-size: 1.05rem; color: var(--text); }
+    .samples { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+    .sample { text-align: left; border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 10px; padding: 10px 12px; cursor: pointer; }
+    .sample:hover { border-color: var(--accent); }
+    .sample b { display: block; }
+    .sample span { color: var(--muted); font-size: .88rem; }
+    #stage { position: relative; margin-top: 12px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); line-height: 0; }
+    #shot { width: 100%; height: auto; display: block; }
+    #layer, #scan { position: absolute; inset: 0; pointer-events: none; }
+    #layer svg, #scan svg { position: absolute; inset: 0; }
+    .st-scan { fill: rgba(255, 210, 63, 0.12); stroke: rgba(255, 190, 0, 0.95); stroke-width: 2; opacity: 0; animation: st-scan 1s ease-out forwards; }
+    @keyframes st-scan { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+    #nextScreen { margin-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    #nextScreen span { color: var(--muted); font-size: .92rem; }
+
+    aside { position: sticky; top: 12px; display: flex; flex-direction: column; gap: 12px; }
+    #chat { height: min(720px, calc(100vh - 40px)); min-height: 460px; }
+    #chat .action.close, #chat .follow { display: none; }
+    details { font-size: .9rem; }
+    summary { cursor: pointer; color: var(--muted); }
+    #trace { margin: 8px 0 0; font: 12.5px/1.45 ui-monospace, Consolas, monospace; white-space: pre-wrap; color: var(--muted); }
+    label.toggle { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: .9rem; color: var(--muted); }
+    .note { margin: 0; font-size: .85rem; color: var(--muted); }
+    #status { min-height: 1.4em; font-size: .92rem; color: var(--muted); }
+    #status.error { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>screen-tutor playground</h1>
+    <p>Show it a screen and chat with it. It reads the screen, explains and draws on it step by step, and can guide a newcomer through a complicated page one click at a time. Try a sample, or drop in your own screenshot.</p>
+  </header>
+
+  <main>
+    <section>
+      <div id="drop">
+        <h2>Pick something to talk about</h2>
+        <div>Drop a screenshot here, paste it (Ctrl+V) or <button type="button" class="plain" id="choose">choose a file</button>. Or try a sample:</div>
+        <div class="samples">
+          <button type="button" class="sample" data-sample="console"><b>Guide me through a cloud console</b><span>A made-up console in three screens: find where to create an access key. Follow along click by click.</span></button>
+          <button type="button" class="sample" data-sample="triangle"><b>Why is the Pythagorean theorem true?</b><span>A right triangle: it builds the proof and slides the pieces.</span></button>
+          <button type="button" class="sample" data-sample="toolbar"><b>Find a button</b><span>A toolbar: ask where something is.</span></button>
+          <button type="button" class="sample" data-sample="bullets"><b>Find it in a slide</b><span>A bullet slide: ask where it says something.</span></button>
+        </div>
+        <input id="file" type="file" accept="image/*" hidden />
+      </div>
+
+      <div id="stage" hidden>
+        <img id="shot" alt="The screen being discussed" />
+        <div id="scan" aria-hidden="true"></div>
+        <div id="layer" aria-hidden="true"></div>
+      </div>
+      <div id="nextScreen" hidden>
+        <button type="button" class="plain" id="next">I clicked it: show the next screen</button>
+        <span id="nextInfo"></span>
+      </div>
+    </section>
+
+    <aside>
+      <div id="chat"></div>
+      <div id="status" role="status"></div>
+      <div class="box">
+        <details>
+          <summary>What happened (timings, regions)</summary>
+          <pre id="trace">Nothing yet.</pre>
+        </details>
+        <label class="toggle"><input type="checkbox" id="showRegions" /> Show the regions OpenCV found</label>
+        <p class="note" style="margin-top:10px">Your picture is processed in memory for each message and is not stored; only numbers (timings, counts) are logged. It is shrunk in your browser before it is sent. The chat remembers the conversation and the drawing stays until you start a new chat.</p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="/static/render.js"></script>
+  <script>
+    (function () {
+      var MAX_WIDTH = 1600;
+      var SAMPLES = {
+        console: { files: ["console1", "console2", "console3"], question: "I am new to cloud consoles. I need an access key for my app to call the API. Where do I start?", next: "Done, what now?" },
+        triangle: { files: ["triangle"], question: "Explain why the Pythagorean theorem is true for this triangle. Prove it." },
+        toolbar: { files: ["toolbar"], question: "Which button is Export? Point at it." },
+        bullets: { files: ["bullets"], question: "Where does it say that insertion keeps the ordering property?" },
+      };
+      var R = window.ScreenTutorRender;
+      var $ = function (id) { return document.getElementById(id); };
+      var state = { width: 0, height: 0, jpeg: "", canvas: { shapes: [] }, regions: [], stepIndex: -1, turn: 0, sample: null, screen: 0, session: Math.random().toString(36).slice(2) };
+      var conversation = [];
+      var goal = null, progress = null;
+      var POINTERS = ["box", "ellipse", "arrow", "highlight", "label", "step_number"];
+      var busy = false, controller = null, finished = null, seq = 0;
+      var typedWaiters = {};
+      var playback = null, lastCursor = null, scanTimer = null;
+      var shot = $("shot"), layer = $("layer"), scan = $("scan"), statusEl = $("status"), trace = $("trace");
+      var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+      function setStatus(text, isError) { statusEl.textContent = text || ""; statusEl.className = isError ? "error" : ""; }
+
+      // Powers written as ^2 read better as superscripts in the chat.
+      function pretty(text) {
+        var sup = { "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
+        return text.replace(/\^(\d)/g, function (_, d) { return sup[d]; }).replace(/sqrt\(/g, "√(");
+      }
+
+      function render() {
+        var view = { width: state.width, height: state.height };
+        var html = R.renderCanvasSvg(state.canvas, state.regions, view);
+        if ($("showRegions").checked) html += R.renderRegionsDebugSvg(state.regions, view);
+        layer.innerHTML = html;
+        return layer.querySelector("svg");
+      }
+      function clearScan() { if (scanTimer) { clearTimeout(scanTimer); scanTimer = null; } scan.innerHTML = ""; }
+
+      // ---- the chat ------------------------------------------------------------------
+      var chat = new R.ChatView($("chat"), {
+        send: function (text) { ask(text); },
+        newChat: function () { newChat(); },
+        clearDrawings: function () { clearDrawings(); },
+        hide: function () {},
+        stop: function () { stopAnswer(); },
+        goTo: function (i) { player.stop(); player.goTo(i, true); },
+        step: function (dir) { player.stop(); player.goTo(Math.max(0, Math.min(player.steps.length - 1, state.stepIndex + (dir === "next" ? 1 : -1))), true); },
+        togglePlay: function () { if (player.playing) player.stop(); else if (player.steps.length) player.resume(); },
+        typed: function (id) { if (typedWaiters[id]) typedWaiters[id](); },
+        toggleFollow: function () {},
+        endTask: function () { stopAnswer(); goal = null; progress = null; chat.handle({ type: "auto", text: "Task ended" }); chat.handle({ type: "task", goal: null, following: true }); dropStaleMarks(); },
+      });
+
+      // Show a step: the drawing on the picture and the caption in the chat; resolves when both are done.
+      function showStep(index, animate) {
+        var step = player.steps[index];
+        if (!step) return Promise.resolve();
+        if (playback) playback.cancel();
+        state.stepIndex = index;
+        state.canvas = step.canvas;
+        clearScan();
+        var svg = render();
+        var id = ++seq;
+        var typed = animate ? new Promise(function (resolve) {
+          var timer = setTimeout(resolve, 9000);
+          typedWaiters[id] = function () { clearTimeout(timer); resolve(); };
+        }) : Promise.resolve();
+        chat.handle({ type: "step", index: index, total: player.steps.length, streaming: player.streaming, caption: pretty(step.caption), animate: animate, seq: id });
+        var ids = animate ? step.newIds : [];
+        var fresh = state.canvas.shapes.filter(function (s) { return ids.indexOf(s.id) >= 0; });
+        var drawn = Promise.resolve();
+        if (fresh.length) {
+          var start = lastCursor || { x: state.width / 2, y: state.height * 0.9 };
+          var plan = R.planAnimation(fresh, state.regions, { startCursor: start });
+          var last = plan.items[plan.items.length - 1];
+          if (last) lastCursor = last.path[last.path.length - 1];
+          playback = R.playAnimation(svg, plan);
+          drawn = playback.finished;
+        }
+        return Promise.all([typed, drawn]).then(function () { delete typedWaiters[id]; });
+      }
+
+      // Steps play one after another as they arrive: draw, let the viewer read, go on.
+      var player = new R.StepPlayer({
+        show: function (index, animate) { return showStep(index, animate); },
+        sleep: sleep,
+        dwell: function (step) { return Math.min(5000, 1100 + step.caption.length * 38); },
+        onError: function (error, index) { console.error("showing step " + (index + 1) + " failed", error); },
+        onPlaying: function (playing) { chat.handle({ type: "playing", value: playing }); if (!playing) maybeFinish(); },
+      });
+
+      function maybeFinish() {
+        if (busy || player.playing || !finished) return;
+        if (!player.steps.length) { finished = null; return; }
+        var f = finished; finished = null;
+        chat.handle({ type: "done", sources: f.sources, followUps: f.followUps });
+      }
+
+      function clearDrawings() {
+        player.stop(); if (playback) playback.cancel();
+        state.canvas = { shapes: [] }; state.stepIndex = -1; lastCursor = null;
+        layer.innerHTML = ""; clearScan();
+      }
+
+      function newChat() {
+        if (controller) controller.abort();
+        controller = null; busy = false; finished = null;
+        player.reset(); if (playback) playback.cancel();
+        conversation = []; goal = null; progress = null;
+        state.canvas = { shapes: [] }; state.regions = []; state.stepIndex = -1; state.turn = 0; lastCursor = null;
+        layer.innerHTML = ""; clearScan(); setStatus("");
+        chat.handle({ type: "reset" });
+        showNext();
+      }
+
+      // ---- the picture -----------------------------------------------------------------
+      // Shrink the picture in the browser: smaller upload, and the same size the model sees.
+      function loadBlob(blob, done) {
+        var url = URL.createObjectURL(blob);
+        var img = new Image();
+        img.onload = function () {
+          var scale = Math.min(1, MAX_WIDTH / img.naturalWidth);
+          var w = Math.round(img.naturalWidth * scale), h = Math.round(img.naturalHeight * scale);
+          var c = document.createElement("canvas"); c.width = w; c.height = h;
+          c.getContext("2d").drawImage(img, 0, 0, w, h);
+          URL.revokeObjectURL(url);
+          state.width = w; state.height = h;
+          state.jpeg = c.toDataURL("image/jpeg", 0.9).split(",")[1];
+          shot.src = c.toDataURL("image/jpeg", 0.9);
+          $("stage").hidden = false;
+          if (done) done();
+        };
+        img.onerror = function () { setStatus("That file could not be read as a picture.", true); };
+        img.src = url;
+      }
+
+      function fetchSample(name) {
+        return fetch("/static/samples/" + name + ".png").then(function (r) { return r.blob(); });
+      }
+
+      // A sample starts a new chat and sends its question straight away.
+      function startSample(key) {
+        var sample = SAMPLES[key];
+        if (busy) return;
+        newChat();
+        state.sample = key; state.screen = 0;
+        fetchSample(sample.files[0]).then(function (blob) { loadBlob(blob, function () { showNext(); ask(sample.question); }); });
+      }
+
+      // Samples with several screens: pretend the learner clicked and the page changed.
+      function showNext() {
+        var sample = state.sample && SAMPLES[state.sample];
+        var more = sample && state.screen < sample.files.length - 1;
+        $("nextScreen").hidden = !more;
+        if (more) $("nextInfo").textContent = "Screen " + (state.screen + 1) + " of " + sample.files.length + ". The chat looks at the new screen and carries on.";
+      }
+
+      // What the desktop app does by itself when the page changes: the marks drawn for the old
+      // page fade away, then the new page is looked at and the next step comes without a message.
+      function dropStaleMarks() {
+        if (playback) playback.cancel();
+        player.stop();
+        state.canvas = { shapes: state.canvas.shapes.filter(function (sh) { return POINTERS.indexOf(sh.kind) < 0 || sh.keep; }) };
+        layer.style.transition = "opacity .25s"; layer.style.opacity = "0";
+        return sleep(270).then(function () { layer.style.transition = "none"; render(); layer.style.opacity = "1"; });
+      }
+
+      function nextScreen() {
+        var sample = state.sample && SAMPLES[state.sample];
+        if (!sample || busy || state.screen >= sample.files.length - 1) return;
+        state.screen += 1;
+        $("nextScreen").hidden = true;
+        Promise.all([dropStaleMarks(), fetchSample(sample.files[state.screen])]).then(function (r) {
+          loadBlob(r[1], function () { showNext(); ask("(the screen changed)", "screen_changed"); });
+        });
+      }
+
+      function describeTrace(t, steps) {
+        var kinds = Object.keys(t.region_counts).map(function (k) { return k + " " + t.region_counts[k]; }).join(", ");
+        var ms = t.timings_ms;
+        trace.textContent =
+          "model: " + t.model + "\n" +
+          "regions found by OpenCV 5: " + t.regions_proposed + " (" + kinds + ")\n" +
+          "regions step: " + Math.round(ms.regions) + " ms, model: " + Math.round(ms.model) + " ms, total: " + Math.round(ms.total) + " ms\n" +
+          "first step ready after: " + Math.round(ms.first_step || 0) + " ms (the rest streamed in while it was drawn)\n" +
+          "model attempts: " + t.attempts + ", web searches: " + (t.lookups || 0) + "\n" +
+          "steps: " + steps + (t.dropped_shape_ids.length ? "\ndrawings dropped (content changed): " + t.dropped_shape_ids.length : "");
+      }
+
+      function handle(e) {
+        if (e.event === "regions") {
+          state.regions = e.regions;
+          state.canvas = e.canvas;
+          if (e.canvas.shapes.length) render();
+          scan.innerHTML = R.renderScanSvg(e.regions, { width: state.width, height: state.height });
+          scanTimer = setTimeout(clearScan, 2600);
+          chat.handle({ type: "status", text: "Thinking" });
+        } else if (e.event === "searching") {
+          chat.handle({ type: "status", text: 'Searching the web for "' + e.query + '"' });
+        } else if (e.event === "step") {
+          var ops = e.operations.filter(function (o) { return o.op !== "remove"; }).map(function (o) { return o.shape_id; });
+          player.add({ caption: e.caption, canvas: e.canvas, newIds: ops });
+        } else if (e.event === "done") {
+          finished = { sources: e.sources || [], followUps: e.follow_ups || [] };
+          if (e.goal) goal = e.goal;
+          progress = e.progress || null;
+          describeTrace(e.trace, e.steps);
+        } else if (e.event === "error" && !player.steps.length) {
+          throw new Error(e.status + ": " + e.detail);
+        }
+      }
+
+      function stopAnswer() {
+        if (!busy) return;
+        if (controller) controller.abort();
+        player.end(); player.stop();
+        busy = false; controller = null;
+        chat.handle({ type: "busy", value: false }); chat.handle({ type: "status", text: null });
+        conversation.push({ role: "assistant", text: player.steps.map(function (s) { return s.caption; }).join(" ") });
+        maybeFinish();
+      }
+
+      async function ask(text, trigger) {
+        trigger = trigger || "user";
+        var question = (text || "").trim();
+        if (!question || busy) return;
+        if (!state.jpeg) {
+          chat.handle({ type: "user", text: question });
+          chat.handle({ type: "error", text: "Choose a picture or a sample first: the chat needs a screen to look at." });
+          return;
+        }
+        busy = true; finished = null; state.stepIndex = -1;
+        var history = conversation.slice();
+        progress = null;
+        if (trigger === "user") {
+          conversation.push({ role: "user", text: question });
+          chat.handle({ type: "user", text: question });
+        } else {
+          conversation.push({ role: "user", text: "(I did something and the screen changed)" });
+          chat.handle({ type: "auto", text: "The screen changed. Checking what comes next" });
+        }
+        chat.handle({ type: "busy", value: true });
+        chat.handle({ type: "status", text: "Looking at the picture" });
+        setStatus("The first request after a pause can take about ten seconds.");
+        var mine = new AbortController();
+        controller = mine;
+        player.begin();
+        var body = {
+          session_id: state.session, question: question, image_base64: state.jpeg,
+          capture: { width: state.width, height: state.height }, canvas: state.canvas,
+          previous_regions: state.regions, turn: state.turn, history: history,
+          goal: goal, trigger: trigger,
+        };
+        try {
+          var response = await fetch("/playground/explain/stream", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: mine.signal });
+          if (!response.ok) {
+            var detail = await response.json().catch(function () { return {}; });
+            throw new Error(response.status + (detail.detail ? ": " + (typeof detail.detail === "string" ? detail.detail : "invalid request") : ""));
+          }
+          var reader = response.body.getReader(), decoder = new TextDecoder(), pending = "";
+          for (;;) {
+            var chunk = await reader.read();
+            if (chunk.done) break;
+            pending += decoder.decode(chunk.value, { stream: true });
+            var newline;
+            while ((newline = pending.indexOf("\n")) >= 0) {
+              var line = pending.slice(0, newline).trim(); pending = pending.slice(newline + 1);
+              if (line) handle(JSON.parse(line));
+            }
+          }
+          state.turn += 1;
+          setStatus("");
+          if (progress === "done") { chat.handle({ type: "auto", text: "Task complete" }); goal = null; chat.handle({ type: "task", goal: null, following: true }); }
+          else chat.handle({ type: "task", goal: goal, following: true });
+        } catch (error) {
+          if (!mine.signal.aborted) {
+            chat.handle({ type: "error", text: "Something went wrong (" + error.message + ")." });
+            setStatus("");
+          }
+        } finally {
+          if (controller === mine) {
+            busy = false; controller = null;
+            chat.handle({ type: "busy", value: false }); chat.handle({ type: "status", text: null });
+            conversation.push({ role: "assistant", text: player.steps.map(function (s) { return s.caption; }).join(" ") });
+            player.end();
+            maybeFinish();
+          }
+        }
+      }
+
+      // ---- the page ----------------------------------------------------------------------
+      $("choose").addEventListener("click", function () { $("file").click(); });
+      $("file").addEventListener("change", function (e) { if (e.target.files[0]) { newChat(); state.sample = null; loadBlob(e.target.files[0], showNext); } });
+      document.querySelectorAll(".sample").forEach(function (b) { b.addEventListener("click", function () { startSample(b.dataset.sample); }); });
+      $("next").addEventListener("click", nextScreen);
+      $("showRegions").addEventListener("change", render);
+      document.addEventListener("paste", function (e) {
+        var item = Array.prototype.find.call(e.clipboardData.items, function (i) { return i.type.indexOf("image") === 0; });
+        if (item) { newChat(); state.sample = null; loadBlob(item.getAsFile(), showNext); }
+      });
+      var drop = $("drop");
+      ["dragenter", "dragover"].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
+      ["dragleave", "drop"].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
+      drop.addEventListener("drop", function (e) { if (e.dataTransfer.files[0]) { newChat(); state.sample = null; loadBlob(e.dataTransfer.files[0], showNext); } });
+    })();
+  </script>
+</body>
+</html>

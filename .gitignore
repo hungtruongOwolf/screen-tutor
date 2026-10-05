@@ -1,0 +1,24 @@
+# secrets and local config
+.env
+*.local
+
+# dependencies and build output
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.vitest/
+*.tsbuildinfo
+
+# downloaded speech program and models (node scripts/setup-voice.mjs)
+desktop/vendor/
+release/
+build/
+
+# CDK output (its templates hold the function settings, keys included), Python build metadata
+infra/cdk.out/
+cdk.out/
+*.egg-info/
+infra/node_modules/

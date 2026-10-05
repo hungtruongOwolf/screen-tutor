@@ -1,0 +1,626 @@
+{
+ "deepseek-ai/DeepSeek-V4.1-Flash": [
+  {
+   "case": "tri0-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 7.681608800005051,
+   "explanation": "x is the slanted side of the triangle — the long side across from the right angle, called the hypotenuse."
+  },
+  {
+   "case": "tri0-which-3",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 7.7229975999944145,
+   "explanation": "The side of length 3 is the horizontal base of the triangle — the number 3 is written right under it."
+  },
+  {
+   "case": "tri0-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 3.9838778999983333,
+   "explanation": "The two legs are 4 and 3, and x is the hypotenuse, the side opposite the right angle."
+  },
+  {
+   "case": "tri1-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 3.9819353000057163,
+   "explanation": "x is the slanted blue side — the hypotenuse, opposite the right angle. The 12 is the vertical side and the 5 is the base."
+  },
+  {
+   "case": "tri1-which-5",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.274830499998643,
+   "explanation": "The side with length 5 is the bottom horizontal side of the triangle — the number 5 is written right under it."
+  },
+  {
+   "case": "tri1-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 4.50945500000671,
+   "explanation": "The right angle is between the side marked 12 and the side marked 5, so those are the two legs. The side marked x is the hypotenuse, opposite the right angle."
+  },
+  {
+   "case": "tri2-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.257357399998,
+   "explanation": "x is the slanted blue side — the hypotenuse, opposite the right angle. The other two sides are given: 8 (vertical) and 6 (horizontal)."
+  },
+  {
+   "case": "tri2-which-6",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.3369421000097645,
+   "explanation": "The side with length 6 is the top horizontal side, the one the orange 6 sits above."
+  },
+  {
+   "case": "tri2-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.7805517000088003,
+   "explanation": "The two legs are 6 and 8, and x is the hypotenuse opposite the right angle."
+  },
+  {
+   "case": "tri3-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.1325906999991275,
+   "explanation": "x is the slanted blue side — the hypotenuse, opposite the right angle. The 8 is the top side and the 15 is the right side."
+  },
+  {
+   "case": "tri3-which-8",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.358176399997319,
+   "explanation": "The side with length 8 is the top horizontal side — the number 8 is written right above it."
+  },
+  {
+   "case": "tri3-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.5703412000002572,
+   "explanation": "The right angle is between the top side 8 and the right side 15, so those are the two legs. The slanted side x is the hypotenuse, opposite the right angle."
+  },
+  {
+   "case": "tri4-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.4150382000079844,
+   "explanation": "x is the slanted blue side — the hypotenuse, opposite the right angle. It is the side whose length we do not know yet."
+  },
+  {
+   "case": "tri4-which-9",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.7369477999891387,
+   "explanation": "The side of length 9 is the bottom, horizontal side of the triangle — the number 9 is written right under it."
+  },
+  {
+   "case": "tri4-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.8873343000013847,
+   "explanation": "The two legs are 12 and 9, and x is the hypotenuse, the side opposite the right angle."
+  },
+  {
+   "case": "tri5-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": false,
+   "attempts": 1,
+   "seconds": 2.6246409000013955,
+   "explanation": "x is the slanted side of the triangle — the blue one running from the bottom-left corner up to the top."
+  },
+  {
+   "case": "tri5-which-7",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.3814633000001777,
+   "explanation": "The side of length 7 is the bottom horizontal side of the triangle — the label 7 sits right under it."
+  },
+  {
+   "case": "tri5-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 3.08852430000843,
+   "explanation": "The blue slanted side is x, the hypotenuse. The green vertical side is 24 and the yellow base is 7, and they meet at a right angle."
+  },
+  {
+   "case": "toolbar0",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.639467400003923,
+   "explanation": "The Export button is the first one on the left, in the row of buttons under the title."
+  },
+  {
+   "case": "toolbar1",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.4753123999980744,
+   "explanation": "The Open button is the second one in the row, between Copy and Share."
+  },
+  {
+   "case": "toolbar2",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.3812456999876304,
+   "explanation": "The Open button is the third one in the row, between Save and Paste."
+  },
+  {
+   "case": "toolbar3",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.4872743000014452,
+   "explanation": "The Export button is the fourth one in the row, between Copy and Open."
+  },
+  {
+   "case": "toolbar4",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.4527642000030028,
+   "explanation": "The Share button is the last one in the row of buttons, on the far right."
+  },
+  {
+   "case": "toolbar5",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.845860299988999,
+   "explanation": "This is the Print button — the first one in the row of buttons."
+  },
+  {
+   "case": "toolbar6",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.3367060000018682,
+   "explanation": "This is the Print button — the second one in the row, between Export and Open."
+  },
+  {
+   "case": "bullets0",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.5656013999978313,
+   "explanation": "It is the first bullet under the title \"Binary search trees\"."
+  },
+  {
+   "case": "bullets1",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.2308290999935707,
+   "explanation": "It is the second bullet in the list, right under \"Each node has at most two children\"."
+  },
+  {
+   "case": "bullets2",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.566575599994394,
+   "explanation": "It is the fourth bullet on the slide, under the heading \"Binary search trees\"."
+  },
+  {
+   "case": "bullets3",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.3490274000068894,
+   "explanation": "It is the fourth bullet in the list, under the title \"Binary search trees\"."
+  },
+  {
+   "case": "bullets4",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.700741199994809,
+   "explanation": "It is the last line on the slide, under the heading \"Binary search trees\"."
+  },
+  {
+   "case": "bullets5",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.8310525999986567,
+   "explanation": "It's the second line under the title \"Binary search trees\"."
+  }
+ ],
+ "Qwen/Qwen3.8-27B": [
+  {
+   "case": "tri0-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.4610532999940915,
+   "explanation": "x is the slanted side, the hypotenuse, running from the top corner down to the bottom-right corner. It is opposite the right angle, between the sides of length "
+  },
+  {
+   "case": "tri0-which-3",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.646763299999293,
+   "explanation": "The side with length 3 is the horizontal bottom side of the triangle, the orange line under the label 3."
+  },
+  {
+   "case": "tri0-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 4.381280599991442,
+   "explanation": "The two legs of the right triangle are 3 and 4, and x is the hypotenuse (the side opposite the right-angle corner)."
+  },
+  {
+   "case": "tri1-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.4312962999974843,
+   "explanation": "x is the slanted blue side, the one that goes from the bottom-left corner up to the top point. It is the longest side, opposite the right angle."
+  },
+  {
+   "case": "tri1-which-5",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.704172900004778,
+   "explanation": "The side with length 5 is the bottom horizontal side of the triangle, the one the label 5 sits under."
+  },
+  {
+   "case": "tri1-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": false,
+   "attempts": 1,
+   "seconds": 4.0254558000015095,
+   "explanation": "The two legs of the right triangle are 12 and 5, and x is the slanted side (the hypotenuse)."
+  },
+  {
+   "case": "tri2-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.4051048000110313,
+   "explanation": "x is the slanted blue side, the one that runs from the bottom corner up to the top-right corner. It is the longest side, opposite the right angle."
+  },
+  {
+   "case": "tri2-which-6",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 1.9922607999906177,
+   "explanation": "The side with length 6 is the top horizontal side (the orange one)."
+  },
+  {
+   "case": "tri2-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 3.7171168999921065,
+   "explanation": "The two straight sides are 8 and 6, and they meet at a right angle (top-left corner). That makes the slanted side x the hypotenuse."
+  },
+  {
+   "case": "tri3-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.7100673999957507,
+   "explanation": "x is the slanted side of the triangle, the one running from the top-left corner down to the bottom point. It is the longest side, opposite the right angle."
+  },
+  {
+   "case": "tri3-which-8",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.641160500003025,
+   "explanation": "The side with length 8 is the top horizontal side of the triangle. I've highlighted it for you."
+  },
+  {
+   "case": "tri3-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": false,
+   "keyword": false,
+   "attempts": 1,
+   "seconds": 3.0887841999938246,
+   "explanation": "The sides 8 and 15 meet at a right angle, so the slanted side x is the hypotenuse."
+  },
+  {
+   "case": "tri4-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.47015160000592,
+   "explanation": "x is the slanted blue side, the longest one that runs from the top corner down to the bottom-right corner. It is the hypotenuse, opposite the right angle."
+  },
+  {
+   "case": "tri4-which-9",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.1190075000049546,
+   "explanation": "The side with length 9 is the horizontal bottom edge of the triangle. I've highlighted it for you."
+  },
+  {
+   "case": "tri4-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": false,
+   "attempts": 1,
+   "seconds": 3.3817024000018137,
+   "explanation": "The two straight sides (the legs) are 12 and 9. The slanted side x is the hypotenuse, the longest side opposite the right angle."
+  },
+  {
+   "case": "tri5-which-x",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": true,
+   "attempts": 1,
+   "seconds": 2.515942499987432,
+   "explanation": "x is the blue slanted side — the longest one, the hypotenuse. It runs from the top corner down to the bottom-left corner, opposite the right angle."
+  },
+  {
+   "case": "tri5-which-7",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.773005299997749,
+   "explanation": "The side with length 7 is the horizontal base (the yellow bottom edge). The number 7 is written just below it."
+  },
+  {
+   "case": "tri5-length",
+   "kind": "triangle",
+   "failed": false,
+   "pointed": true,
+   "keyword": false,
+   "attempts": 1,
+   "seconds": 3.0964518999971915,
+   "explanation": "This is a right triangle (the small square marks the right angle). The two legs are 24 and 7, and x is the slanted hypotenuse."
+  },
+  {
+   "case": "toolbar0",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.689962899996317,
+   "explanation": "The Export button is the first one on the left of the button row. Click here."
+  },
+  {
+   "case": "toolbar1",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.5209935999882873,
+   "explanation": "The Open button is the second one in the row, right after Copy."
+  },
+  {
+   "case": "toolbar2",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.378586599996197,
+   "explanation": "The Open button is the third one in the row, between Save and Paste. Click here."
+  },
+  {
+   "case": "toolbar3",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.4860027999966405,
+   "explanation": "The Export button is the fourth one in the row, between Copy and Open. Click here."
+  },
+  {
+   "case": "toolbar4",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.6709493000089424,
+   "explanation": "The Share button is the last one on the right of the toolbar. Click here."
+  },
+  {
+   "case": "toolbar5",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.275996500000474,
+   "explanation": "The Print button is the first one on the left of the toolbar. Click here."
+  },
+  {
+   "case": "toolbar6",
+   "kind": "toolbar",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.779174499999499,
+   "explanation": "The Print button is the second one in the row, right after Export. Click here."
+  },
+  {
+   "case": "bullets0",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.2653651000000536,
+   "explanation": "It's the first line under the title, right below 'Binary search trees'."
+  },
+  {
+   "case": "bullets1",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.583459399989806,
+   "explanation": "It is the second bullet point, just below 'Each node has at most two children'."
+  },
+  {
+   "case": "bullets2",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.3860245999967447,
+   "explanation": "It is the third bullet point, right under 'Insertion keeps the ordering property'."
+  },
+  {
+   "case": "bullets3",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.6496402000047965,
+   "explanation": "It is the fourth line down, just above 'Each node has at most two children'."
+  },
+  {
+   "case": "bullets4",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.5609870000043884,
+   "explanation": "It is the last bullet point, near the bottom of the list."
+  },
+  {
+   "case": "bullets5",
+   "kind": "bullets",
+   "failed": false,
+   "pointed": true,
+   "keyword": null,
+   "attempts": 1,
+   "seconds": 2.2978629000135697,
+   "explanation": "It is the first line under the title, right below 'Binary search trees'."
+  }
+ ]
+}

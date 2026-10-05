@@ -1,0 +1,69 @@
+{
+  "name": "screen-tutor-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Windows overlay: ask about your screen, get answers drawn on it",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node build.mjs && electron .",
+    "typecheck": "tsc --noEmit",
+    "setup:voice": "node build.mjs && node dist/setupVoice.js",
+    "package": "node scripts/package.mjs",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.25.0",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  },
+  "author": "screen-tutor authors",
+  "build": {
+    "appId": "com.screentutor.app",
+    "productName": "Screen Tutor",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build/defaults.json",
+        "to": "defaults.json"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Screen-Tutor-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Screen-Tutor-Portable-${version}.${ext}"
+    }
+  }
+}
