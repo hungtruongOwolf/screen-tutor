@@ -126,6 +126,7 @@ Hotkeys:
 | Ctrl+Shift+, | Previous step |
 | Ctrl+Shift+X | Take the drawings off the screen (the chat stays) |
 | Ctrl+Shift+S | Stop: cancel the answer being fetched, end the task being followed (the End task button does the same), take the marks off |
+| Ctrl+Shift+R | Recording mode: the tutor's windows can be seen by a screen recorder (OBS, Game Bar), for a demo video; press again to switch off. `RECORDING=1` starts in it |
 | Ctrl+Shift+D | Toggle the debug view: draws every detected region with its number on the last capture |
 | Ctrl+Shift+Q | Quit |
 
@@ -137,6 +138,10 @@ Try the real model on any image without the desktop app:
 cd backend
 .\.venv\Scripts\python.exe toolssk_model.py my-screenshot.png "What is x in the triangle?" out.png
 ```
+
+## Recording a demo video
+
+The overlay, the chat and the orb are hidden from screen captures on purpose (the AI must never see its own drawings), so a recorder such as OBS or the Windows Game Bar shows a screen without them. Press **Ctrl+Shift+R** (or start with `RECORDING=1`) to switch on recording mode: the windows become visible to recorders. While it is on, the capture sent to the model is taken with the tutor's windows made invisible for that moment (a short blink at each question, so the model still does not see its own marks), and the screen watcher stops comparing while the overlay draws and measures again from the finished picture, so it does not take the drawing for a page change; the panel and the orb are left out of the comparison. A page change in the first second or so after a drawing starts is not noticed in this mode. Press Ctrl+Shift+R again to go back to normal.
 
 ## Tests
 

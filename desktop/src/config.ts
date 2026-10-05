@@ -47,6 +47,8 @@ export interface Config {
     talk: string;
     debug: string;
     quit: string;
+    // Recording mode: the tutor's windows can be seen by a screen recorder (for a demo video).
+    record: string;
     next: string;
     previous: string;
   };
@@ -83,6 +85,7 @@ export function loadConfig(projectRoot: string): Config {
       talk: "CommandOrControl+Shift+Space",
       debug: "CommandOrControl+Shift+D",
       quit: "CommandOrControl+Shift+Q",
+      record: "CommandOrControl+Shift+R",
       // Ctrl+Shift+. and Ctrl+Shift+, are Ctrl+> and Ctrl+< on a US keyboard.
       next: "CommandOrControl+Shift+.",
       previous: "CommandOrControl+Shift+,",

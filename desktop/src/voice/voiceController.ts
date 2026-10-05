@@ -59,6 +59,11 @@ export class VoiceController {
     this.piper = speech.piper ? new PiperTts(speech.piper, speech.rate, log) : undefined;
   }
 
+  // The orb's window, for the recording mode (it can then be seen by a screen recorder).
+  get orbWindow(): BrowserWindow | undefined {
+    return this.window;
+  }
+
   // Starts the recogniser and the window; resolves once the microphone has opened or failed to (check
   // micWorking: without a microphone the tutor can still speak, and the chat is the way in).
   async start(): Promise<void> {

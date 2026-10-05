@@ -27,6 +27,9 @@ interface PlayedStep {
   newIds: string[]; // shapes this step adds or moves: these are animated
 }
 
+// Recording mode: the tutor's windows are normally hidden from screen captures (so the AI never sees its own
+// drawings); to record a demo video they have to be visible to the recorder (Ctrl+Shift+R, or RECORDING=1).
+let recording = process.env.RECORDING === "1";
 let overlay: BrowserWindow | undefined;
 let panel: BrowserWindow | undefined;
 // Voice: the tutor listens and speaks (when the speech recogniser has been downloaded).
@@ -45,6 +48,7 @@ let seq = 0; // numbers what is shown so the windows can say which one they fini
 const narrations = new Map<number, Promise<string | undefined>>();
 const NARRATION_WAIT_MS = 2500; // longer than this and the caption itself is read
 const overlayWaiters = new Map<number, () => void>();
+let rebaseTimer: NodeJS.Timeout | undefined;
 const typedWaiters = new Map<number, () => void>();
 
 // What the stream said once it ended, kept until the steps have been played so the
@@ -265,6 +269,7 @@ async function showStep(index: number, animate: boolean): Promise<void> {
         resolve();
       });
     });
+  if (animate) holdWatcher();
   const drawn = wait(overlayWaiters);
   const typed = animate ? wait(typedWaiters) : Promise.resolve();
   const spoken = animate && voice?.speaking ? speakStep(index, step.caption) : Promise.resolve();
@@ -303,6 +308,70 @@ function requestNarration(index: number, caption: string, question: string): voi
       return narrate(config.backendUrl, config.accessToken, { caption, question, earlier });
     })(),
   );
+}
+
+// ---- recording mode ---------------------------------------------------------------------------------
+// While recording, the windows can be seen by the screen watcher too, so it must not take the tutor's own
+// drawing for a change of the page: it stops comparing while the overlay draws or fades, and measures
+// again from the finished picture a moment later. The chat panel and the orb are left out altogether.
+
+function ownWindows(): BrowserWindow[] {
+  return [overlay, panel, voice?.orbWindow].filter((w): w is BrowserWindow => !!w && !w.isDestroyed());
+}
+
+function setRecording(on: boolean): void {
+  recording = on;
+  for (const window of ownWindows()) window.setContentProtection(!on);
+  watchSend({ type: "ignore", rects: on ? windowRects() : [] });
+  emit({
+    type: "auto",
+    text: on
+      ? "Recording mode on: the tutor can now be seen by a screen recorder. Press Ctrl+Shift+R to switch it off."
+      : "Recording mode off: the tutor is hidden from screen captures again.",
+  });
+}
+
+// The chat panel and the orb as shares of the screen.
+function windowRects(): { x: number; y: number; w: number; h: number }[] {
+  const { bounds } = screen.getPrimaryDisplay();
+  return [panel, voice?.orbWindow]
+    .filter((w): w is BrowserWindow => !!w && !w.isDestroyed())
+    .map((w) => {
+      const b = w.getBounds();
+      return { x: (b.x - bounds.x) / bounds.width, y: (b.y - bounds.y) / bounds.height, w: b.width / bounds.width, h: b.height / bounds.height };
+    });
+}
+
+function holdWatcher(): void {
+  if (!recording) return;
+  if (rebaseTimer) clearTimeout(rebaseTimer);
+  rebaseTimer = undefined;
+  watchSend({ type: "hold" });
+}
+
+function rebaseAfterDrawing(): void {
+  if (!recording) return;
+  if (rebaseTimer) clearTimeout(rebaseTimer);
+  rebaseTimer = setTimeout(() => {
+    rebaseTimer = undefined;
+    if (goal && following) {
+      watchSend({ type: "ignore", rects: windowRects() });
+      watchSend({ type: "rebase" });
+    }
+  }, 1200);
+}
+
+// A capture for the model must not show the tutor's own drawings: while recording (windows visible to
+// captures) they are made invisible for the moment the screen is taken.
+async function captureWithoutOurWindows(): Promise<Awaited<ReturnType<typeof captureScreen>>> {
+  if (!recording) return captureScreen();
+  const windows = ownWindows();
+  for (const window of windows) window.setOpacity(0);
+  try {
+    return await captureScreen();
+  } finally {
+    for (const window of windows) if (!window.isDestroyed()) window.setOpacity(1);
+  }
 }
 
 // The keys and buttons: they take over from automatic playback.
@@ -431,7 +500,7 @@ async function ask(text: string, trigger: "user" | "screen_changed" = "user"): P
     // The panel and the overlay are hidden from captures, so this is the screen as the
     // learner sees it, without the tutor's own windows.
     void startWatching().then(() => watchSend({ type: "mark" }));
-    const capture = await captureScreen();
+    const capture = await captureWithoutOurWindows();
     player.begin();
     // The drawing on screen stays and the backend moves it onto this capture (or
     // drops what no longer fits); the regions of the last capture are sent back so
@@ -590,6 +659,8 @@ function onWatch(message: { kind: string; detail?: string }): void {
 
 // The page changed: marks that pointed at the old page go (what builds up stays).
 function markStale(): void {
+  holdWatcher();
+  rebaseAfterDrawing();
   player.stop();
   canvas = { shapes: canvas.shapes.filter((s) => !(POINTER_KINDS.includes(s.kind) && !s.keep)) };
   send("overlay:stale", canvas);
@@ -765,6 +836,7 @@ function startVoice(voicePaths: VoicePaths): void {
     { piper: findPiper(), rate: config.speechRate },
   );
   voice.start().then(() => {
+    if (recording) setRecording(true); // RECORDING=1: the orb exists now too
     // Without a microphone the tutor still speaks; the chat is how to ask.
     if (voice && !voice.micWorking) openChat();
   }).catch((error: Error) => {
@@ -841,7 +913,10 @@ app.whenReady().then(() => {
   ipcMain.on("panel:end-task", stopTask);
   ipcMain.on("watch:event", (_event, message: { kind: string; detail?: string }) => onWatch(message));
   ipcMain.on("panel:typed", (_event, finishedSeq: number) => typedWaiters.get(finishedSeq)?.());
-  ipcMain.on("overlay:animation-done", (_event, finishedSeq: number) => overlayWaiters.get(finishedSeq)?.());
+  ipcMain.on("overlay:animation-done", (_event, finishedSeq: number) => {
+    overlayWaiters.get(finishedSeq)?.();
+    rebaseAfterDrawing();
+  });
 
   setTimeout(() => (needsToken() ? askForToken() : void checkBackend()), 3000); // after the windows are up
   const { explain, newChat: newChatKey, clear, stop, mute, talk, debug, quit, next, previous } = config.hotkeys;
@@ -856,6 +931,7 @@ app.whenReady().then(() => {
     globalShortcut.register(previous, previousStep),
     globalShortcut.register(debug, () => send("overlay:toggle-debug")),
     globalShortcut.register(quit, () => app.quit()),
+    globalShortcut.register(config.hotkeys.record, () => setRecording(!recording)),
   ];
   if (registered.includes(false)) {
     console.error("Some hotkeys could not be registered (already in use by another app?)");

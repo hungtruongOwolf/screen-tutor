@@ -112,6 +112,7 @@ export class ChangeDetector {
   private volatility: Float32Array | undefined;
   private masked: Uint8Array | undefined;
   private trail: Pointer[] = [];
+  private ignored: { x: number; y: number; w: number; h: number }[] = []; // as shares of the frame
   private staleSent = false;
   private peakShare = 0;
   private peakBlock = 0; // most changed cells seen in one block since the baseline
@@ -121,6 +122,11 @@ export class ChangeDetector {
   stats = { cells: 0, active: 0, block: 0, motionBlock: 0, masked: 0, moving: false, stillMs: 0 };
 
   constructor(private readonly options: DetectorOptions = DEFAULT_OPTIONS) {}
+
+  // Parts of the screen to leave out of every comparison (the tutor's own windows when they can be recorded).
+  setIgnore(rects: { x: number; y: number; w: number; h: number }[]): void {
+    this.ignored = rects;
+  }
 
   // The screen as it is now is what the marks were drawn for.
   reset(frame: Frame): void {
@@ -160,6 +166,8 @@ export class ChangeDetector {
     const changedInBlock = new Uint16Array(columns * rows); // differs from the baseline
     const movedInBlock = new Uint16Array(columns * rows); // differs from the last frame
     const lastRow = Math.floor(height * (1 - this.options.ignoreBottom));
+    const skip = this.ignored.map((r) => ({ x0: r.x * width, y0: r.y * height, x1: (r.x + r.w) * width, y1: (r.y + r.h) * height }));
+    const skipped = (x: number, y: number) => skip.some((r) => x >= r.x0 && x < r.x1 && y >= r.y0 && y < r.y1);
 
     let fromBaseline = 0;
     let active = 0;
@@ -174,7 +182,7 @@ export class ChangeDetector {
         this.volatility[i] = v;
         if (this.masked[i] === 0 && v > MASK_ABOVE) this.masked[i] = 1;
         else if (this.masked[i] === 1 && v < UNMASK_BELOW) this.masked[i] = 0;
-        if (this.masked[i] === 1 || y >= lastRow || near(x, y)) continue;
+        if (this.masked[i] === 1 || y >= lastRow || near(x, y) || (skip.length > 0 && skipped(x, y))) continue;
 
         active += 1;
         const block = Math.floor(y / blockSize) * columns + Math.floor(x / blockSize);

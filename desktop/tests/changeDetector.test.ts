@@ -215,3 +215,25 @@ describe("noise and the taskbar", () => {
     expect(play(d, [...repeat(blank(), 3), ...repeat(specks, 40)], 0)).toEqual([]);
   });
 });
+
+describe("leaving out parts of the screen", () => {
+  it("does not take a change inside an ignored rectangle (the tutor's own window) for a page change", () => {
+    const d = new ChangeDetector();
+    d.reset(blank());
+    d.setIgnore([{ x: 0, y: 0, w: 0.6, h: 1 }]); // the left 60 %
+
+    const events = play(d, [...repeat(blank(), 3), ...repeat(withBlock(0.5), 30)], 0);
+
+    expect(events).toEqual([]);
+  });
+
+  it("still sees a change outside it", () => {
+    const d = new ChangeDetector();
+    d.reset(blank());
+    d.setIgnore([{ x: 0, y: 0, w: 0.3, h: 1 }]);
+
+    const events = play(d, [...repeat(blank(), 3), ...repeat(frame((x) => (x > W * 0.5 ? 30 : 240)), 30)], 0);
+
+    expect(events.some((e) => e.startsWith("fire"))).toBe(true);
+  });
+});

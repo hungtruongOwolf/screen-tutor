@@ -18,6 +18,9 @@ export type WatcherMessage =
   | { type: "start"; sourceId: string }
   | { type: "mark" } // the screen as it is now, kept (a question was just asked)
   | { type: "arm" } // the marks were drawn: watch for change from here
+  | { type: "hold" } // stop comparing (the overlay is drawing and can be seen by the capture)
+  | { type: "rebase" } // the drawing is done: measure from the screen as it is now
+  | { type: "ignore"; rects: { x: number; y: number; w: number; h: number }[] } // as shares of the screen
   | { type: "pointer"; fx: number; fy: number } // the mouse, as a share of the screen
   | { type: "debug" } // report what the detector sees, twice a second
   | { type: "stop" };
@@ -113,6 +116,20 @@ window.watcherApi.onMessage((message) => {
       armed = true;
       break;
     }
+    case "hold":
+      armed = false;
+      break;
+    case "rebase": {
+      const now = look() ?? latest;
+      if (!now) return;
+      marked = undefined;
+      detector.reset(now);
+      armed = true;
+      break;
+    }
+    case "ignore":
+      detector.setIgnore(message.rects);
+      break;
     case "pointer":
       pointer = { x: message.fx, y: message.fy };
       break;
