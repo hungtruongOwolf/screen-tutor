@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" role="img" aria-label="Whole multi-page tasks: the first run with a vague goal completed 3 of 9, and after the goal was worded clearly both models completed 9 of 9">
+  <defs>
+    <style>
+      .bg { fill: #0e1320; }
+      .panel { fill: #121a2b; stroke: #2a3552; stroke-width: 1.5; }
+      .title { font: 700 22px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .h { font: 700 17px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .p { font: 400 13.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .sub { font: 400 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .nm { font: 600 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .big { font: 700 64px 'Segoe UI', Helvetica, Arial, sans-serif; }
+      .dot { fill: #3ddc97; }
+      .dotx { fill: #1b2540; stroke: #ff9a4a; stroke-width: 2.5; }
+      .dotl { font: 700 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #08241a; text-anchor: middle; }
+      .dotxl { font: 700 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #ff9a4a; text-anchor: middle; }
+      .lg { font: 600 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #c9d1e6; }
+      .call { fill: #1b2540; stroke: #ff6b4a; stroke-width: 2; }
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="600" rx="18"/>
+  <text class="title" x="30" y="44">Whole tasks across several pages</text>
+  <text class="sub" x="30" y="66">Three tasks on a three-page console, three runs each, driven the way the app drives them.</text>
+
+  <!-- left: first run -->
+  <rect class="panel" x="20" y="90" width="460" height="400" rx="16"/>
+  <text class="h" x="44" y="126">First run: a vague goal</text>
+  <text class="p" x="44" y="148">"I need an access key for my app."</text>
+  <text class="big" x="44" y="232" style="fill:#ff9a4a">3 / 9</text>
+  <text class="p" x="214" y="206">tasks completed</text><text class="p" x="214" y="226">DeepSeek V4.1 Flash</text>
+
+  <text class="nm" x="44" y="278">From the dashboard</text>
+  <circle class="dotx" cx="272" cy="271" r="13"/><text class="dotxl" x="272" y="276">x</text>
+  <circle class="dotx" cx="306" cy="271" r="13"/><text class="dotxl" x="306" y="276">x</text>
+  <circle class="dotx" cx="340" cy="271" r="13"/><text class="dotxl" x="340" y="276">x</text>
+  <text class="nm" x="44" y="318">Starts on the user list</text>
+  <circle class="dot" cx="272" cy="311" r="13"/><text class="dotl" x="272" y="316">✓</text>
+  <circle class="dot" cx="306" cy="311" r="13"/><text class="dotl" x="306" y="316">✓</text>
+  <circle class="dotx" cx="340" cy="311" r="13"/><text class="dotxl" x="340" y="316">x</text>
+  <text class="nm" x="44" y="358">Goes back (wrong click)</text>
+  <circle class="dot" cx="272" cy="351" r="13"/><text class="dotl" x="272" y="356">✓</text>
+  <circle class="dotx" cx="306" cy="351" r="13"/><text class="dotxl" x="306" y="356">x</text>
+  <circle class="dotx" cx="340" cy="351" r="13"/><text class="dotxl" x="340" y="356">x</text>
+
+  <rect class="call" x="44" y="386" width="412" height="88" rx="12"/>
+  <text class="lg" x="60" y="410">Most misses were not wrong answers.</text>
+  <text class="p" x="60" y="432">The model opened the existing user ci-bot, a valid way</text>
+  <text class="p" x="60" y="450">to get a key, but the checker expected "Create user".</text>
+  <text class="p" x="60" y="468">One run did go wrong (it said to click Secrets).</text>
+
+  <!-- right: after rewording -->
+  <rect class="panel" x="500" y="90" width="480" height="400" rx="16"/>
+  <text class="h" x="524" y="126">After wording the goal clearly</text>
+  <text class="p" x="524" y="148">"A new user that can use an access key (programmatic access)."</text>
+  <text class="big" x="524" y="232" style="fill:#3ddc97">9 / 9</text>
+  <text class="p" x="694" y="206">tasks completed</text><text class="p" x="694" y="226">by each of the two models</text>
+
+  <text class="nm" x="790" y="288" text-anchor="middle">DeepSeek</text>
+  <text class="nm" x="920" y="288" text-anchor="middle">Qwen3.8</text>
+  <text class="p" x="524" y="331">From the dashboard</text>
+  <circle class="dot" cx="760" cy="326" r="12"/>
+  <circle class="dot" cx="790" cy="326" r="12"/>
+  <circle class="dot" cx="820" cy="326" r="12"/>
+  <circle class="dot" cx="890" cy="326" r="12"/>
+  <circle class="dot" cx="920" cy="326" r="12"/>
+  <circle class="dot" cx="950" cy="326" r="12"/>
+  <text class="p" x="524" y="371">Starts on the user list</text>
+  <circle class="dot" cx="760" cy="366" r="12"/>
+  <circle class="dot" cx="790" cy="366" r="12"/>
+  <circle class="dot" cx="820" cy="366" r="12"/>
+  <circle class="dot" cx="890" cy="366" r="12"/>
+  <circle class="dot" cx="920" cy="366" r="12"/>
+  <circle class="dot" cx="950" cy="366" r="12"/>
+  <text class="p" x="524" y="411">Goes back (wrong click)</text>
+  <circle class="dot" cx="760" cy="406" r="12"/>
+  <circle class="dot" cx="790" cy="406" r="12"/>
+  <circle class="dot" cx="820" cy="406" r="12"/>
+  <circle class="dot" cx="890" cy="406" r="12"/>
+  <circle class="dot" cx="920" cy="406" r="12"/>
+  <circle class="dot" cx="950" cy="406" r="12"/>
+  <text class="p" x="524" y="468">Run to run it varies a little: an earlier run of Qwen3.8-27B completed 8 of 9.</text>
+
+  <!-- bottom: what each dot is -->
+  <rect class="panel" x="20" y="506" width="960" height="74" rx="16"/>
+  <circle class="dot" cx="50" cy="543" r="11"/>
+  <text class="lg" x="70" y="548">one run of the task: every turn points at the control the learner needs next</text>
+  <text class="lg" x="70" y="568" style="font-weight:400;fill:#97a0b8">and gives the right verdict (on the way, or "off track" after a wrong click). Median 2.5 to 4.8 s per turn.</text>
+  <circle class="dotx" cx="780" cy="543" r="11"/>
+  <text class="lg" x="800" y="548">a run that failed</text>
+</svg>

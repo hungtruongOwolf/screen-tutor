@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" role="img" aria-label="Narration with NVIDIA Nemotron: a caption is rewritten as speech, checked by a guard, and either spoken or replaced by the original caption; reasoning off makes it fast; three models compared on nine captions">
+  <defs>
+    <style>
+      .bg { fill: #0e1320; }
+      .panel { fill: #121a2b; stroke: #2a3552; stroke-width: 1.5; }
+      .node { fill: #1b2540; stroke: #34416a; stroke-width: 1.5; }
+      .nv { fill: #1b2540; stroke: #76b900; stroke-width: 2.4; }
+      .guard { fill: #1b2540; stroke: #ff6b4a; stroke-width: 2; }
+      .title { font: 700 22px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .h { font: 700 17px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .p { font: 400 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .sub { font: 400 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .lbl { font: 700 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #c9d1e6; }
+      .e { fill: none; stroke: #4a5b92; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .eg { fill: none; stroke: #3ddc97; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+      .eo { fill: none; stroke: #ff9a4a; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 7 6; }
+      .ah { fill: #4a5b92; } .ahg { fill: #3ddc97; } .aho { fill: #ff9a4a; }
+      .track { fill: #1b2540; }
+      .ok { fill: #3ddc97; } .warn { fill: #ff9a4a; } .nvb { fill: #76b900; } .blue { fill: #5b8cff; }
+      .cell { font: 600 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .hd { font: 700 12.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; letter-spacing: .06em; }
+      .tick { stroke: #2a3552; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="600" rx="18"/>
+  <text class="title" x="30" y="44">Narration with NVIDIA Nemotron</text>
+  <text class="sub" x="30" y="66">Each step is spoken as a person would say it. It may rephrase, never add.</text>
+
+  <!-- flow -->
+  <rect class="node" x="30" y="96" width="170" height="92" rx="12"/>
+  <text class="h" x="46" y="124">Step caption</text>
+  <text class="p" x="46" y="146">"x^2 = 6^2 + 8^2"</text><text class="p" x="46" y="164">as written to read</text>
+
+  <rect class="nv" x="250" y="96" width="210" height="92" rx="12"/>
+  <text class="h" x="266" y="124">Nemotron-3-Super</text>
+  <text class="p" x="266" y="146">on Nebius Token Factory</text><text class="p" x="266" y="164">reasoning off, about 0.7 s</text>
+
+  <rect class="guard" x="510" y="96" width="200" height="92" rx="12"/>
+  <text class="h" x="526" y="124">Guard</text>
+  <text class="p" x="526" y="146">every number kept</text><text class="p" x="526" y="164">short, plain text</text>
+
+  <rect class="node" x="780" y="76" width="190" height="56" rx="12" style="stroke:#3ddc97;stroke-width:2"/>
+  <text class="h" x="796" y="100">Speak the rewrite</text><text class="p" x="796" y="120">natural, in the voice</text>
+  <rect class="node" x="780" y="152" width="190" height="56" rx="12" style="stroke:#ff9a4a;stroke-width:2"/>
+  <text class="h" x="796" y="176">Speak the caption</text><text class="p" x="796" y="196">fails, slow or rejected</text>
+
+  <path class="e" d="M200 142 L248 142"/><path class="ah" d="M242 136 L250 142 L242 148 Z"/>
+  <path class="e" d="M460 142 L508 142"/><path class="ah" d="M502 136 L510 142 L502 148 Z"/>
+  <path class="eg" d="M710 130 C 745 130, 745 104, 778 104"/><path class="ahg" d="M771 98 L779 104 L771 110 Z"/>
+  <path class="eo" d="M710 154 C 745 154, 745 180, 778 180"/><path class="aho" d="M771 174 L779 180 L771 186 Z"/>
+  <text class="p" x="722" y="224" style="fill:#3ddc97">passes</text><text class="p" x="790" y="228" style="fill:#ff9a4a">otherwise</text>
+
+  <!-- left bottom: reasoning -->
+  <rect class="panel" x="20" y="250" width="440" height="330" rx="16"/>
+  <text class="h" x="44" y="284">Why reasoning is off</text>
+  <text class="p" x="44" y="306">Same caption, Nemotron-3-Super:</text>
+  <text class="lbl" x="44" y="352">Default settings</text>
+  <rect class="track" x="44" y="362" width="390" height="30" rx="8"/><rect class="warn" x="44" y="362" width="390" height="30" rx="8"/>
+  <text class="cell" x="56" y="383" style="fill:#2b1604">2.5 s, the answer came back empty</text>
+  <text class="lbl" x="44" y="436">Reasoning off</text>
+  <rect class="track" x="44" y="446" width="390" height="30" rx="8"/><rect class="nvb" x="44" y="446" width="110" height="30" rx="8"/>
+  <text class="cell" x="166" y="467">0.7 s, clean text</text>
+  <text class="p" x="44" y="518">The model spent its token budget thinking before the</text>
+  <text class="p" x="44" y="536">first word. For speech that has to start in about a</text>
+  <text class="p" x="44" y="554">second, thinking is turned off.</text>
+
+  <!-- right bottom: comparison -->
+  <rect class="panel" x="480" y="250" width="500" height="330" rx="16"/>
+  <text class="h" x="504" y="284">Compared on the same 9 captions</text>
+  <text class="p" x="504" y="306">Same prompt, same guard, all on Token Factory.</text>
+  <text class="hd" x="504" y="344">MODEL</text><text class="hd" x="716" y="344">PASSED GUARD</text><text class="hd" x="860" y="344">MEDIAN</text>
+  <line class="tick" x1="504" y1="354" x2="956" y2="354"/>
+  <text class="cell" x="504" y="388">Nemotron-3-Super</text>
+  <rect class="track" x="716" y="372" width="108" height="22" rx="6"/><rect class="nvb" x="716" y="372" width="84" height="22" rx="6"/><text class="cell" x="832" y="389" style="font-size:14px">7/9</text>
+  <text class="cell" x="860" y="388">0.72 s</text>
+  <text class="cell" x="504" y="436">DeepSeek V4.1 Flash</text>
+  <rect class="track" x="716" y="420" width="108" height="22" rx="6"/><rect class="blue" x="716" y="420" width="108" height="22" rx="6"/><text class="cell" x="832" y="437" style="font-size:14px">9/9</text>
+  <text class="cell" x="860" y="436">0.72 s</text>
+  <text class="cell" x="504" y="484">Qwen3.8-27B</text>
+  <rect class="track" x="716" y="468" width="108" height="22" rx="6"/><rect class="blue" x="716" y="468" width="96" height="22" rx="6"/><text class="cell" x="832" y="485" style="font-size:14px">8/9</text>
+  <text class="cell" x="860" y="484">0.57 s</text>
+  <text class="p" x="504" y="530">On this job Nemotron is on par, not ahead. It stays in as</text>
+  <text class="p" x="504" y="548">an NVIDIA open model that holds its own behind the guard.</text>
+  <text class="p" x="504" y="566">Small test: 9 captions, one run.</text>
+</svg>

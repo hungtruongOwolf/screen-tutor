@@ -75,11 +75,17 @@ The app is not code-signed, so Windows may say "unknown publisher": choose More 
 | Whole tasks over several pages, driven like the app drives them | 9 of 9 tasks completed with each of the two models, including leading the learner back after a wrong click | [`backend/evaluation/tasks_report.md`](backend/evaluation/tasks_report.md) |
 | Graviton against x86 for the backend | About 22 % cheaper per turn, slightly faster | [`backend/evaluation/benchmark.md`](backend/evaluation/benchmark.md) |
 
+<p align="center"><img src="docs/img/task-eval.svg" alt="Whole multi-page tasks: 3 of 9 with a vague goal, 9 of 9 once the goal was worded clearly" width="100%"></p>
+
 ## Nebius Token Factory and NVIDIA Nemotron
 
 **Where Token Factory sped the work up.** One OpenAI-compatible API meant that switching a model is changing a string. In one afternoon we ran the same 31 labelled screens through six vision models (DeepSeek V4.1 Flash, Qwen3.8-27B, Kimi K2.6, GLM 5.3 Flash, Gemma 3 27B, MiniCPM-V 4.5) and chose by evidence: DeepSeek V4.1 Flash is the default and Qwen3.8-27B is the second model. Latency of one model varied from 2 s to 47 s, so the backend hedges: if the main model has not produced a step in 4 seconds, the same request goes to the second model and the first answer wins. Responses stream, so the first step is drawn while the rest is still being written. Code: `backend/app/openai_adapter.py`, `backend/app/hedging.py`.
 
+<p align="center"><img src="docs/img/nebius-models.svg" alt="Six vision models compared on 31 screens, and how a second model covers a slow first one" width="100%"></p>
+
 **Where NVIDIA Nemotron is used.** `nvidia/nemotron-3-super-120b-a12b`, served on Token Factory, rewrites each step's caption as natural speech in under a second with reasoning switched off (with defaults it spent its tokens thinking and returned nothing). The rewrite may rephrase but never add: a guard drops it if it loses a number of the caption, runs on, or contains markup, and the caption is read instead. Code: `backend/app/narration.py`, tests in `backend/tests/test_narration.py`. The vision turn runs on DeepSeek and Qwen; an NVIDIA vision model on a dedicated endpoint is the next comparison.
+
+<p align="center"><img src="docs/img/nemotron-narration.svg" alt="Narration with NVIDIA Nemotron: rewrite, guard, speak, and how three models compare" width="100%"></p>
 
 **Other services.** Tavily search on the model's request, with sources shown; AWS Lambda on Graviton with a streaming Function URL.
 
