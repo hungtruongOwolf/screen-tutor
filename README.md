@@ -1,30 +1,46 @@
 # Sherpa
 
-**The AI guide that sees your screen, points at what to do next, and walks with you to the end.**
+### Stop reading instructions. Start following the arrow.
+
+**Sherpa is an AI guide that lives on top of your screen.** It sees exactly what you see, points at what to do next, and stays with you from the first click to the last, in any app, on any page.
 
 <p align="center"><img src="docs/img/loop.svg" alt="Sherpa sees the page, understands the goal, points at the next step, and follows you to the next page" width="100%"></p>
 
 ## The problem
 
-Ask any AI "how do I create an IAM user for my CLI?" and you get correct steps, and still no idea where they are. The menu is called something slightly different. The button is on another page. So you scroll, you guess, you paste a screenshot and ask again, and again at the next page.
+Software keeps getting bigger, and nobody gets a map. A cloud console has hundreds of services. An internal tool has a menu for every team that ever shipped a feature. A tax form, a design app, a lecture video with a proof you cannot follow: the answer exists, and you are still lost.
 
-Sherpa is the guide that **sees the page you are on and shows you**: the box, the arrow, the next page, until you are done.
+AI made the *what* easy. Ask any chatbot and you get correct steps. But software is **spatial** and the answer is **text**. "Open the Users page and choose Create access key" tells you nothing about *where*, on *this* page, with *this* layout, in *this* version, with the menu named slightly differently from the guide.
 
-## What it does
+So everyone runs the same loop. Ask in one tab. Switch to the app. Screenshot. Paste. Read. Translate words back into a place on the screen. Click. The page changes. Start again. Every lap costs minutes and a context switch, and the advice never sees the page you are actually on, so it is wrong in small ways that cost a lot: the wrong permission on a production account, the wrong plan on a checkout page, a setup abandoned half way.
 
-- **Sees** the screen you are looking at, right now, and finds what is really on it with OpenCV 5.
-- **Understands** the goal ("create an IAM user with an access key") and keeps it across pages.
-- **Points** at the next step on your screen: a box, an arrow, a highlighted line, a diagram, a proof that moves.
-- **Follows** you: when you click and the page changes, the old marks disappear at once and the next step appears, without you asking again.
-- **Talks**: say "Hey Sherpa" and ask. Speech recognition and the voice run on your computer.
+New hires, developers in unfamiliar consoles, customers on a form, students with a proof: the people who feel it most are the ones with the least time to learn a new interface. And the teams behind the software answer the same "where do I click" question, over and over.
+
+## How Sherpa solves it
+
+Sherpa removes the loop. There is nothing to open, paste or translate.
+
+- **It is already there.** Sherpa floats above whatever you are doing. Call it with your voice or a hotkey and it appears on the page you are on: no new tab, no screenshot, no copy and paste, no integration with the app. It works on software it has never seen.
+- **It sees what you see, right now.** Computer vision (OpenCV 5) turns the live screen into numbered, real elements, so the guide knows what is on this page and where.
+- **It shows instead of tells.** A box on the exact button, an arrow, a highlighted line, a diagram, a proof that moves. The answer is a place on your screen, with one sentence on why.
+- **It stays with you.** Say what you want to get done once. When you click and the page changes, the old marks vanish and the next step appears, until the task is done. You never ask twice.
+- **It explains, not just directs.** It tells you why a step matters (why a permission matters, why a key is shown only once), so you leave knowing the interface, not just one path through it.
+- **It guides; you act.** Sherpa never clicks, types or changes anything for you. You stay in control, nothing can go wrong because of it, and you learn the interface you will use again tomorrow. Agents that click for you already exist. This is the other half.
+- **It talks.** Say "Hey Sherpa" and ask. Speech recognition and the voice run on your computer: no audio leaves it.
+
+## See it work
+
+### Guided through the AWS console
+
+*"Create an IAM user for my Claude Code." Sherpa boxes the search bar, then each menu, each field and each option as the pages change, warns that the key is shown only once, and says when the task is done.*
 
 https://github.com/user-attachments/assets/c5be13bd-957f-4119-a761-8332bd14316e
 
+### A proof, drawn on the video
+
+*A right triangle on screen and a question: can you solve it? Sherpa labels the sides, works it out, then shows why the theorem is true: four triangles slide into place on top of the picture.*
+
 https://github.com/user-attachments/assets/a464b8ba-48f6-46a9-bfaf-8885a80e07c5
-
-It teaches too: ask why the Pythagorean theorem is true and it draws the proof on top of the video that shows the triangle.
-
-<!-- demo: add the video link and two GIFs (guided IAM task, animated proof) here -->
 
 ## Try it
 
@@ -45,10 +61,6 @@ The app is not code-signed, so Windows may say "unknown publisher": choose More 
 2. **The vision model chooses, it does not guess.** It picks regions by number and writes the steps, so every mark lands on a real element and never at an invented coordinate.
 3. **Each step is drawn and said.** Captions and arrows are placed clear of text, animated, and rewritten as natural speech.
 4. **The watcher keeps the thread.** The client keeps the goal and the conversation, watches the screen, clears stale marks the moment the page changes, and starts the next step when the page has settled. The backend is stateless.
-
-## Guide, don't operate
-
-Sherpa shows where to act and **you** act. Agents that click for you already exist (a CLI, a computer-use agent); a guide is useful for the opposite reason. You stay in control, you see where everything is, and you learn the interface you will use again tomorrow. It never clicks, types or changes anything on your behalf.
 
 ## What we measured
 
