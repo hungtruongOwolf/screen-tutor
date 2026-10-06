@@ -39,8 +39,8 @@ export interface Context {
 const GREETING = /^(?:(?:hey|hay|hi|hello|ok|okay|yo|so|well|um|uh)[\s,.!-]+)+/i;
 
 // The words that call the assistant (the first one is how it is named in hints). "Sherpa" has two
-// syllables and is easy to say; "Nova" works too.
-export const DEFAULT_WAKE_WORDS = ["sherpa", "nova"];
+// syllables and is easy to say.
+export const DEFAULT_WAKE_WORDS = ["sherpa"];
 let wakeWords = [...DEFAULT_WAKE_WORDS];
 
 export function configureWake(words: string[]): void {
@@ -55,9 +55,7 @@ export function wakeLabel(): string {
 
 // What recognisers write when they mishear one of the wake words.
 const ALIASES: Record<string, string[]> = {
-  tutor: ["teacher", "teachers", "tutoring", "tudo", "tutoria", "tooter", "tudder", "tutter"],
   sherpa: ["sherper", "shirpa", "shurpa", "sharper", "sherpas", "sherpa's", "surpa", "sherba", "sherpah", "shepa", "sherpar"],
-  nova: ["noah", "novah", "nuva", "nover", "novo", "novas", "nova's"],
 };
 
 function editDistance(a: string, b: string): number {
@@ -91,7 +89,7 @@ function afterWake(text: string): string | undefined {
   const rest = greeting ? text.slice(greeting[0].length) : text;
   const one = /^([A-Za-z']+)[\s,.:;!?-]*/.exec(rest);
   if (one && isWakeWord(one[1] as string)) return rest.slice(one[0].length).trim();
-  // "no va" heard for "nova"
+  // "sher pa" heard for "sherpa"
   const two = /^([A-Za-z']+)[\s,.-]+([A-Za-z']+)[\s,.:;!?-]*/.exec(rest);
   if (two && isWakeWord((two[1] as string) + (two[2] as string))) return rest.slice(two[0].length).trim();
   return undefined;

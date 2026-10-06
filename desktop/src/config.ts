@@ -74,7 +74,7 @@ export function loadConfig(projectRoot: string): Config {
     defaultQuestion: "Explain what I am looking at.",
     narration: process.env.NARRATION !== "off",
     speechRate: Math.min(2, Math.max(0.7, Number(process.env.SPEECH_RATE) || 1.2)),
-    wakeWords: (process.env.WAKE_WORD ?? "sherpa,nova").split(",").map((w) => w.trim()).filter(Boolean),
+    wakeWords: (process.env.WAKE_WORD ?? "sherpa").split(",").map((w) => w.trim()).filter(Boolean),
     hotkeys: {
       // Opens and hides the chat.
       explain: "CommandOrControl+Shift+E",

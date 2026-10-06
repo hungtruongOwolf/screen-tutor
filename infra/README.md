@@ -47,16 +47,16 @@ If the main model is slow (no step after `HEDGE_AFTER_SECONDS`, default 4), the 
 
 ## Observability
 
-- Logs: CloudWatch log group `/screen-tutor/explain`.
-- Metrics (namespace `ScreenTutor`, from the service's embedded metric lines): `TurnLatencyMs`, `ModelLatencyMs`, `RegionsLatencyMs`, `Attempts`, `Regions`, `Steps`, `DroppedShapes`, `TurnFailures`. Lambda's own `Invocations`, `Errors` and `Duration` come with it.
+- Logs: CloudWatch log group `/sherpa/explain`.
+- Metrics (namespace `Sherpa`, from the service's embedded metric lines): `TurnLatencyMs`, `ModelLatencyMs`, `RegionsLatencyMs`, `Attempts`, `Regions`, `Steps`, `DroppedShapes`, `TurnFailures`. Lambda's own `Invocations`, `Errors` and `Duration` come with it.
 - The `Sherpa` dashboard graphs them.
 
 ## Benchmark (Graviton against x86)
 
 ```bash
-npx cdk deploy ScreenTutorBenchmark -c benchmark=true --require-approval never --outputs-file out.json
+npx cdk deploy SherpaBenchmark -c benchmark=true --require-approval never --outputs-file out.json
 # then, in backend/: python tools/benchmark.py --arm <Urlarm64> --x86 <Urlx86> --token <BACKEND_ACCESS_TOKEN>
-npx cdk destroy ScreenTutorBenchmark -c benchmark=true --force
+npx cdk destroy SherpaBenchmark -c benchmark=true --force
 ```
 
 Two functions with the same image code and the canned model; results and method in `backend/evaluation/benchmark.md`.

@@ -1,7 +1,7 @@
 """Graviton (arm64) versus x86_64: speed and cost of the part of a turn that runs on our compute.
 
 Two copies of the backend run on AWS Lambda with the same image code, the same memory and the canned
-model (so no model call is in the measurement): `cdk deploy ScreenTutorBenchmark -c benchmark=true`
+model (so no model call is in the measurement): `cdk deploy SherpaBenchmark -c benchmark=true`
 in infra/ prints their URLs. This script sends the same screenshots to both and compares
 
   * regions   OpenCV region proposing, from the service's own timer (ms)

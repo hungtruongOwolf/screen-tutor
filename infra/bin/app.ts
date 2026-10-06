@@ -4,7 +4,7 @@ import * as path from "node:path";
 import * as cdk from "aws-cdk-lib";
 import * as dotenv from "dotenv";
 import { BenchmarkStack } from "../lib/benchmark-stack";
-import { ScreenTutorStack } from "../lib/screen-tutor-stack";
+import { SherpaStack } from "../lib/sherpa-stack";
 
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
@@ -15,7 +15,7 @@ function required(name: string): string {
 }
 
 const app = new cdk.App();
-new ScreenTutorStack(app, "ScreenTutor", {
+new SherpaStack(app, "Sherpa", {
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.AWS_REGION ?? process.env.CDK_DEFAULT_REGION ?? "us-east-1",
@@ -33,9 +33,17 @@ new ScreenTutorStack(app, "ScreenTutor", {
 
 // The benchmark pair (arm64 and x86), only when asked for: `-c benchmark=true`.
 if (app.node.tryGetContext("benchmark") === "true") {
-  new BenchmarkStack(app, "ScreenTutorBenchmark", {
+  new BenchmarkStack(app, "SherpaBenchmark", {
     env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.AWS_REGION ?? process.env.CDK_DEFAULT_REGION ?? "us-east-1" },
     accessToken: required("BACKEND_ACCESS_TOKEN"),
     memoryMb: Number(process.env.BENCH_MEMORY_MB ?? 2048),
+  });
+}
+
+// The stack of the earlier name: an empty definition, only so that `cdk destroy ScreenTutor -c legacy=true`
+// can remove what is left of it.
+if (app.node.tryGetContext("legacy") === "true") {
+  new cdk.Stack(app, "ScreenTutor", {
+    env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.AWS_REGION ?? process.env.CDK_DEFAULT_REGION ?? "us-east-1" },
   });
 }

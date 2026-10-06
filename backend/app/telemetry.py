@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import time
 
-NAMESPACE = "ScreenTutor"
+NAMESPACE = "Sherpa"
 
 
 def _emit(dimensions: dict[str, str], metrics: dict[str, tuple[float, str]], properties: dict) -> None:

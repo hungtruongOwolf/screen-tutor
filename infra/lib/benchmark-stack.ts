@@ -7,7 +7,7 @@ import type { Construct } from "constructs";
 // Two copies of the backend, one on Graviton (arm64) and one on x86_64, with the same image
 // code, memory and settings, and with the canned model (MODEL_ADAPTER=fake) so that what is
 // measured is the compute: OpenCV region proposing and building the answer. Deployed only for the
-// benchmark (`cdk deploy ScreenTutorBenchmark -c benchmark=true`) and destroyed afterwards.
+// benchmark (`cdk deploy SherpaBenchmark -c benchmark=true`) and destroyed afterwards.
 export class BenchmarkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps & { accessToken: string; memoryMb: number }) {
     super(scope, id, props);
@@ -16,7 +16,7 @@ export class BenchmarkStack extends cdk.Stack {
       ["x86", lambda.Architecture.X86_64, Platform.LINUX_AMD64],
     ] as const) {
       const fn = new lambda.DockerImageFunction(this, `Bench${arch}`, {
-        functionName: `screen-tutor-bench-${arch}`,
+        functionName: `sherpa-bench-${arch}`,
         code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, "..", "..", "backend"), { platform }),
         architecture,
         memorySize: props.memoryMb,

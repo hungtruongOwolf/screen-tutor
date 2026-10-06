@@ -25,15 +25,15 @@ and is the same speed on either architecture, so Graviton is the right default a
 
 ## Method (to reproduce)
 
-1. In `infra/`: `npx cdk deploy ScreenTutorBenchmark -c benchmark=true --require-approval never --outputs-file out.json`.
-   This creates two Lambda functions from the same backend image code, `screen-tutor-bench-arm64` and
-   `screen-tutor-bench-x86`, both 2048 MB, both with the canned model (`MODEL_ADAPTER=fake`), so no model call is
+1. In `infra/`: `npx cdk deploy SherpaBenchmark -c benchmark=true --require-approval never --outputs-file out.json`.
+   This creates two Lambda functions from the same backend image code, `sherpa-bench-arm64` and
+   `sherpa-bench-x86`, both 2048 MB, both with the canned model (`MODEL_ADAPTER=fake`), so no model call is
    in the measurement. The stack prints their Function URLs.
 2. In `backend/`: `python tools/benchmark.py --arm <url> --x86 <url> --token <BACKEND_ACCESS_TOKEN> --runs 15 --out evaluation/benchmark.json`.
    It sends the six sample screens of the repository (scaled to 1920 x 1080, JPEG quality 85, the way the desktop
    app sends a capture) to each function: one first call, one warm-up round, then 15 rounds, 90 timed turns per
    architecture.
-3. `npx cdk destroy ScreenTutorBenchmark -c benchmark=true --force` removes the functions.
+3. `npx cdk destroy SherpaBenchmark -c benchmark=true --force` removes the functions.
 
 What the numbers are:
 

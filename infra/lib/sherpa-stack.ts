@@ -21,19 +21,19 @@ export interface Settings {
 // The keys are passed as environment variables of the function: encrypted at rest
 // by AWS, visible to administrators of this account. Fine for a personal project;
 // use Secrets Manager or Parameter Store for anything shared.
-export class ScreenTutorStack extends cdk.Stack {
+export class SherpaStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps & { settings: Settings }) {
     super(scope, id, props);
     const { settings } = props;
 
     const logGroup = new logs.LogGroup(this, "Logs", {
-      logGroupName: "/screen-tutor/explain",
+      logGroupName: "/sherpa/explain",
       retention: logs.RetentionDays.ONE_MONTH,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     const fn = new lambda.DockerImageFunction(this, "ExplainFunction", {
-      functionName: "screen-tutor-explain",
+      functionName: "sherpa-explain",
       description: "Sherpa Explain Turn service (OpenCV 5 + vision model), arm64",
       code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, "..", "..", "backend"), {
         platform: Platform.LINUX_ARM64,
@@ -65,13 +65,13 @@ export class ScreenTutorStack extends cdk.Stack {
     // Metrics written by the service (embedded metric format) and by Lambda itself.
     const metric = (name: string, statistic: string) =>
       new cloudwatch.Metric({
-        namespace: "ScreenTutor",
+        namespace: "Sherpa",
         metricName: name,
         dimensionsMap: { Model: settings.modelName },
         statistic,
         period: cdk.Duration.minutes(5),
       });
-    const dashboard = new cloudwatch.Dashboard(this, "Dashboard", { dashboardName: "screen-tutor" });
+    const dashboard = new cloudwatch.Dashboard(this, "Dashboard", { dashboardName: "sherpa" });
     dashboard.addWidgets(
       new cloudwatch.GraphWidget({
         title: "Turn latency (ms)",

@@ -1,17 +1,24 @@
-// Where the app keeps its data. The product used to be called screen-tutor: an existing folder of that
-// name is still used (the voice models are large, the token is a one-time entry), so an update loses nothing.
+// Where the app keeps its data. The product had an earlier name: a folder left by it is moved to the new
+// name the first time (the voice models are large, the token is a one-time entry), so an update loses nothing.
 
-import { existsSync } from "node:fs";
+import { existsSync, renameSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 
 export const APP_FOLDER = "sherpa";
-const LEGACY_FOLDER = "screen-tutor";
+const LEGACY_FOLDER = "Sherpa";
 
 function pick(base: string): string {
   const current = join(base, APP_FOLDER);
   const legacy = join(base, LEGACY_FOLDER);
-  return !existsSync(current) && existsSync(legacy) ? legacy : current;
+  if (!existsSync(current) && existsSync(legacy)) {
+    try {
+      renameSync(legacy, current);
+    } catch {
+      return legacy; // in use or not allowed: keep using it where it is
+    }
+  }
+  return current;
 }
 
 // Models and programs (large): %LOCALAPPDATA%\sherpa

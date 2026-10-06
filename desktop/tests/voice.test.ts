@@ -11,10 +11,9 @@ const task: Context = { inConversation: false, taskActive: true };
 afterEach(() => configureWake(DEFAULT_WAKE_WORDS));
 
 describe("the wake word", () => {
-  it("is Sherpa by default, and Nova still works", () => {
+  it("is Sherpa by default", () => {
     expect(wakeLabel()).toBe("Sherpa");
     expect(routeUtterance("Hey Sherpa, where do I click?", idle)).toEqual({ kind: "ask", text: "where do I click?" });
-    expect(routeUtterance("Hey Nova, where do I click?", idle)).toEqual({ kind: "ask", text: "where do I click?" });
   });
 
   it("accepts the ways Sherpa is misheard, even split in two", () => {
@@ -23,16 +22,10 @@ describe("the wake word", () => {
     }
   });
 
-  it("accepts the ways Nova is misheard, even split in two", () => {
-    for (const heard of ["Hey Noah, where do I click?", "Hey Novah, where do I click?", "Hey no va, where do I click?", "Hey Nuva, where do I click?", "Hello Nova where do I click"]) {
-      expect(routeUtterance(heard, idle).kind).toBe("ask");
-    }
-  });
-
-  it("takes a near miss of a four letter word but not a different word", () => {
-    expect(routeUtterance("Hey Nora, where do I click?", idle).kind).toBe("ask"); // one letter off a four letter word: accepted
+  it("takes a near miss of a long word but not a different word", () => {
+    expect(routeUtterance("Hey Sherpo, where do I click?", idle).kind).toBe("ask"); // a letter off a six letter word: accepted
     expect(routeUtterance("Hey Nick, where do I click?", idle).kind).toBe("ignore");
-    expect(routeUtterance("the novel was great and I enjoyed it a lot", idle).kind).toBe("ignore");
+    expect(routeUtterance("the mountain guides carried the load all day long", idle).kind).toBe("ignore");
   });
 
   it("can be changed to any word, and the first one names it", () => {
@@ -40,7 +33,7 @@ describe("the wake word", () => {
 
     expect(wakeLabel()).toBe("Jarvis");
     expect(routeUtterance("Hey Jarvis, open the chat", idle)).toEqual({ kind: "command", command: "open-chat" });
-    expect(routeUtterance("Hey Nova, where do I click?", idle).kind).toBe("ignore");
+    expect(routeUtterance("Hey Sherpa, where do I click?", idle).kind).toBe("ignore");
     expect(routeUtterance("Hey Jarvis", idle)).toEqual({ kind: "wake" });
   });
 
