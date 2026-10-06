@@ -83,6 +83,26 @@ The app is not code-signed, so Windows may say "unknown publisher": choose More 
 
 **Other services.** Tavily search on the model's request, with sources shown; AWS Lambda on Graviton with a streaming Function URL.
 
+## Tavily: knowledge at the moment it is needed
+
+A screen shows what a page *says*, not what it *means*. "What does this permission set allow?", "why is the key shown only once?", "what will this setting cost?" are facts that are not on the screen, and a documentation index built in advance goes stale the day a console changes its layout. So Sherpa does not carry a knowledge base. It fetches knowledge **at task time**, with Tavily, for the page the learner is on.
+
+**Today**
+
+- The planner decides whether the screen is enough. When a fact, a definition or a source is missing, it asks for one web search and writes a short query itself, from the goal and what it sees.
+- The backend calls Tavily Search, hands the top results back to the model, and the model answers and **names the source** ("according to ..."). The chat shows "Searching the web for ..." while it happens and the source links under the answer, so the learner can check them.
+- A search never breaks a turn: if it fails or finds nothing, Sherpa says it could not check a source and answers from what it knows. It searches at most once per turn, so latency stays bounded, and never for something that is on the screen.
+
+**Where it goes**
+
+1. **Queries from the screen.** The query is built from the screen's own words and, where it can be told, the product and the interface version, so a search for "Create access key" on one console does not return another vendor's page.
+2. **The page, not the snippet.** Tavily Extract fetches the exact documentation page the search found, so the answer quotes the page and not a two-line summary.
+3. **Ranking against the screen.** Results are ranked by how well they match the page and the goal, and the answer cites the one it used.
+4. **A cache that grows from use.** Results are kept per product and interface version, with an expiry. Nobody builds it in advance; a page that changed simply misses the cache and is fetched again, so the knowledge stays as fresh as the console.
+5. **Grounding check.** A step that cites a fact is compared with the fetched page before it is shown, so the guide cannot assert something the source does not say.
+6. **Documentation crawl.** For the tasks people ask about most, Tavily Map and Crawl read a product's documentation once per interface version and warm the cache.
+7. **"What changed" lookups.** When the screen no longer matches what the cache says (a redesigned console), Sherpa searches for what changed before it guides.
+
 ## Run it yourself
 
 ```powershell
