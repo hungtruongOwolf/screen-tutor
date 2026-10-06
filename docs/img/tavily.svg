@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" role="img" aria-label="How Sherpa uses Tavily: it decides when to look, builds a query from the screen, checks the cache, searches and ranks, extracts the exact page, caches it, answers naming the source, checks the answer against the page and shows the sources">
+  <defs>
+    <style>
+      .bg { fill: #0e1320; }
+      .node { fill: #1b2540; stroke: #34416a; stroke-width: 1.5; }
+      .key { fill: #1b2540; stroke: #ff6b4a; stroke-width: 2; }
+      .tav { fill: #1b2540; stroke: #5b8cff; stroke-width: 2; }
+      .opt { fill: #141b2e; stroke: #34416a; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .h { font: 700 17px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .p { font: 400 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .n { fill: #ff6b4a; }
+      .nt { font: 700 12px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #0e1320; text-anchor: middle; }
+      .e { fill: none; stroke: #4a5b92; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .eh { fill: none; stroke: #3ddc97; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 8 6; }
+      .ed { fill: none; stroke: #6b7694; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 5 5; }
+      .ah { fill: #4a5b92; }
+      .ahg { fill: #3ddc97; }
+      .ahd { fill: #6b7694; }
+      .lbl { font: 700 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #c9d1e6; }
+      .lg { font: 700 13px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #3ddc97; }
+      .title { font: 700 22px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .sub { font: 400 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="600" rx="18"/>
+  <text class="title" x="30" y="40">Knowledge at the moment it is needed</text>
+  <text class="sub" x="30" y="62">No index built in advance. Tavily is called at task time, for the page the learner is on.</text>
+
+  <!-- row 1 -->
+  <rect class="node" x="30" y="90" width="200" height="86" rx="12"/>
+  <circle class="n" cx="52" cy="112" r="12"/><text class="nt" x="52" y="116">1</text>
+  <text class="h" x="72" y="117">Screen + goal</text>
+  <text class="p" x="48" y="143">what the learner sees</text><text class="p" x="48" y="160">and is trying to do</text>
+
+  <rect class="key" x="270" y="90" width="200" height="86" rx="12"/>
+  <circle class="n" cx="292" cy="112" r="12"/><text class="nt" x="292" y="116">2</text>
+  <text class="h" x="312" y="117">Missing a fact?</text>
+  <text class="p" x="288" y="143">only if the screen does</text><text class="p" x="288" y="160">not show it</text>
+
+  <rect class="node" x="510" y="90" width="200" height="86" rx="12"/>
+  <circle class="n" cx="532" cy="112" r="12"/><text class="nt" x="532" y="116">3</text>
+  <text class="h" x="552" y="117">Query</text>
+  <text class="p" x="528" y="143">screen words + product</text><text class="p" x="528" y="160">+ interface version</text>
+
+  <rect class="node" x="750" y="90" width="220" height="86" rx="12"/>
+  <circle class="n" cx="772" cy="112" r="12"/><text class="nt" x="772" y="116">4</text>
+  <text class="h" x="792" y="117">Cache lookup</text>
+  <text class="p" x="768" y="143">per product and</text><text class="p" x="768" y="160">interface version</text>
+
+  <!-- row 2 (right to left) -->
+  <rect class="tav" x="750" y="260" width="220" height="86" rx="12"/>
+  <circle class="n" cx="772" cy="282" r="12"/><text class="nt" x="772" y="286">5</text>
+  <text class="h" x="792" y="287">Tavily Search</text>
+  <text class="p" x="768" y="313">candidates, ranked against</text><text class="p" x="768" y="330">the page and the goal</text>
+
+  <rect class="tav" x="510" y="260" width="200" height="86" rx="12"/>
+  <circle class="n" cx="532" cy="282" r="12"/><text class="nt" x="532" y="286">6</text>
+  <text class="h" x="552" y="287">Tavily Extract</text>
+  <text class="p" x="528" y="313">the exact documentation</text><text class="p" x="528" y="330">page, not a snippet</text>
+
+  <rect class="node" x="270" y="260" width="200" height="86" rx="12"/>
+  <circle class="n" cx="292" cy="282" r="12"/><text class="nt" x="292" y="286">7</text>
+  <text class="h" x="312" y="287">Save to cache</text>
+  <text class="p" x="288" y="313">grows from use, with an</text><text class="p" x="288" y="330">expiry per page</text>
+
+  <rect class="opt" x="30" y="260" width="200" height="86" rx="12"/>
+  <text class="h" x="48" y="292">Map + Crawl</text>
+  <text class="p" x="48" y="318">warm the cache for the</text><text class="p" x="48" y="335">most asked tasks</text>
+
+  <!-- row 3 -->
+  <rect class="key" x="270" y="430" width="200" height="86" rx="12"/>
+  <circle class="n" cx="292" cy="452" r="12"/><text class="nt" x="292" y="456">8</text>
+  <text class="h" x="312" y="457">Model answers</text>
+  <text class="p" x="288" y="483">names the source:</text><text class="p" x="288" y="500">"according to ..."</text>
+
+  <rect class="node" x="510" y="430" width="200" height="86" rx="12"/>
+  <circle class="n" cx="532" cy="452" r="12"/><text class="nt" x="532" y="456">9</text>
+  <text class="h" x="552" y="457">Grounding check</text>
+  <text class="p" x="528" y="483">each cited fact is</text><text class="p" x="528" y="500">checked against the page</text>
+
+  <rect class="key" x="750" y="430" width="220" height="86" rx="12"/>
+  <circle class="n" cx="772" cy="452" r="12"/><text class="nt" x="772" y="456">10</text>
+  <text class="h" x="792" y="457">Shown</text>
+  <text class="p" x="768" y="483">with the source links,</text><text class="p" x="768" y="500">so the learner can check</text>
+
+  <!-- edges row 1 -->
+  <path class="e" d="M230 133 L268 133"/><path class="ah" d="M262 127 L270 133 L262 139 Z"/>
+  <path class="e" d="M470 133 L508 133"/><path class="ah" d="M502 127 L510 133 L502 139 Z"/>
+  <path class="e" d="M710 133 L748 133"/><path class="ah" d="M742 127 L750 133 L742 139 Z"/>
+  <!-- miss: cache to search -->
+  <path class="e" d="M860 176 L860 258"/><path class="ah" d="M854 252 L860 260 L866 252 Z"/>
+  <text class="lbl" x="872" y="222">miss</text>
+  <!-- row 2 -->
+  <path class="e" d="M750 303 L712 303"/><path class="ah" d="M718 297 L710 303 L718 309 Z"/>
+  <path class="e" d="M510 303 L472 303"/><path class="ah" d="M478 297 L470 303 L478 309 Z"/>
+  <path class="ed" d="M230 303 L268 303"/><path class="ahd" d="M262 297 L270 303 L262 309 Z"/>
+  <!-- extracted page to the answer -->
+  <path class="e" d="M370 346 L370 428"/><path class="ah" d="M364 422 L370 430 L376 422 Z"/>
+  <!-- hit: cache straight to the answer -->
+  <path class="eh" d="M970 133 L988 133 L988 560 L420 560 L420 518"/><path class="ahg" d="M414 524 L420 516 L426 524 Z"/>
+  <text class="lg" x="560" y="550">hit: no search at all</text>
+  <!-- row 3 -->
+  <path class="e" d="M470 473 L508 473"/><path class="ah" d="M502 467 L510 473 L502 479 Z"/>
+  <path class="e" d="M710 473 L748 473"/><path class="ah" d="M742 467 L750 473 L742 479 Z"/>
+</svg>
