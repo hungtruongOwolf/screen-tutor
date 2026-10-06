@@ -1,8 +1,12 @@
 # screen-tutor
 
-A Windows assistant that looks at your screen when you ask, explains in a chat, and draws on top of whatever you are looking at (boxes, arrows, highlights, squares, a moving proof) step by step. It teaches (a maths proof, an idea in a video) and it guides: a newcomer lost in a cloud console is led click by click. You keep chatting; it remembers the conversation and looks at the screen again each time.
+**An AI agent that sees your screen, knows what you are trying to do, and shows you how.** It draws on whatever you are looking at (arrows, highlights, diagrams, a proof that moves), speaks, and follows the task from page to page by itself. Lost in a cloud console with two hundred services? Say "Hey Nova, I need an IAM user for my CLI", and it points at the first menu item, notices when the page changes, and points at the next one. Watching a lecture you cannot follow? It draws the proof on top of the video.
 
-Status: working end to end (voice, chat, drawing, following a task, a public web playground, the backend on AWS Graviton). Answers are not always right: the model can pick the wrong region, which is why the evaluation (31 cases) and the debug view exist. Open work is in `.scratch/screen-tutor/issues/`.
+You do not paste a screenshot into a chatbot and hunt for the next click: the guide shares your screen, the answer is a place on the screen, and it is there at the next page.
+
+OpenCV 5 finds what is really on the screen (numbered regions with pixel boxes), a vision model on Nebius Token Factory chooses regions and writes the steps, an NVIDIA Nemotron model turns each step into natural speech, Tavily supplies facts the screen does not hold, and the backend runs on AWS Graviton. Where it is going (an agent graph with a verifier, MCP tools, just-in-time retrieval, tenants, a browser extension and an embeddable SDK) is designed in [`ARCHITECTURE.md`](ARCHITECTURE.md), with every part marked Built, Prototype or Planned.
+
+**Status:** a working MVP. Voice, chat, drawing, task following, a public web playground and the Graviton backend run end to end; the evaluations are in `backend/evaluation/` (31 single-picture cases and three multi-screen tasks). It can still be wrong, which is why the evaluations, the debug view and the log exist. Open work: `.scratch/screen-tutor/issues/`.
 
 Licence: MIT (`LICENSE`). Notes for the hackathon feedback forms: `FEEDBACK.md`.
 
