@@ -24,6 +24,8 @@ py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe -m uvicorn app.server:app --port 8000
 ```
 
+`backend/requirements.lock` has the exact versions the evaluation and the benchmark were run with (OpenCV `opencv-python-headless==5.0.0.93`); for a reproducible install use `pip install -r requirements.lock` and then `pip install --no-deps -e .`. The desktop app's versions are pinned by `desktop/package-lock.json` (`npm ci`).
+
 Desktop app (terminal 2):
 
 ```powershell
@@ -51,6 +53,15 @@ cd desktop; npm run typecheck
 ```
 
 Not covered by automated tests (check by hand): screen capture, global hotkeys, click-through, and that the overlay does not appear in captures.
+
+## Reproduce the evaluation
+
+All of these need `NEBIUS_API_KEY` in `.env` and call a live model (a few cents each); results are written next to the scripts in `backend/evaluation/`.
+
+- `python -m evaluation.run --models a,b`: 31 labelled screens, one mark each (`report.md`).
+- `python -m evaluation.tasks --model <id> --repeat 3`: whole tasks across three pages (`tasks_report.md`).
+- `python tools/trace.py`: a decision trace of the guide loop, what OpenCV found and what the agent did next (`trace.md`).
+- Graviton against x86: see "Deploying and measuring on AWS"; the method is in `benchmark.md`.
 
 ## Look at what the region proposer finds
 
