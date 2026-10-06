@@ -18,6 +18,10 @@ Sherpa is the guide that **sees the page you are on and shows you**: the box, th
 - **Follows** you: when you click and the page changes, the old marks disappear at once and the next step appears, without you asking again.
 - **Talks**: say "Hey Sherpa" and ask. Speech recognition and the voice run on your computer.
 
+https://github.com/user-attachments/assets/c5be13bd-957f-4119-a761-8332bd14316e
+
+https://github.com/user-attachments/assets/a464b8ba-48f6-46a9-bfaf-8885a80e07c5
+
 It teaches too: ask why the Pythagorean theorem is true and it draws the proof on top of the video that shows the triangle.
 
 <!-- demo: add the video link and two GIFs (guided IAM task, animated proof) here -->
