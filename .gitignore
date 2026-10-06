@@ -23,3 +23,6 @@ cdk.out/
 *.egg-info/
 infra/node_modules/
 release-public/
+
+# local notes
+.local/

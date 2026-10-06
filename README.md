@@ -4,7 +4,7 @@
 
 You do not paste a screenshot into a chatbot and hunt for the next click: the guide shares your screen, the answer is a place on the screen, and it is there at the next page.
 
-OpenCV 5 finds what is really on the screen (numbered regions with pixel boxes), a vision model on Nebius Token Factory chooses regions and writes the steps, an NVIDIA Nemotron model turns each step into natural speech, Tavily supplies facts the screen does not hold, and the backend runs on AWS Graviton. Where it is going (an agent graph with a verifier, MCP tools, just-in-time retrieval, tenants, a browser extension and an embeddable SDK) is designed in [`ARCHITECTURE.md`](ARCHITECTURE.md), with every part marked Built, Prototype or Planned.
+OpenCV 5 finds what is really on the screen (numbered regions with pixel boxes), a vision model on Nebius Token Factory chooses regions and writes the steps, an NVIDIA Nemotron model turns each step into natural speech, Tavily supplies facts the screen does not hold, and the backend runs on AWS Graviton. The design of the full product (an agent graph with a verifier, MCP tools, retrieval at task time, tenants, a browser extension, an embeddable SDK) is in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 **Status:** a working MVP. Voice, chat, drawing, task following, a public web playground and the Graviton backend run end to end; the evaluations are in `backend/evaluation/` (31 single-picture cases and three multi-screen tasks). It can still be wrong, which is why the evaluations, the debug view and the log exist. Open work: `.scratch/screen-tutor/issues/`.
 
