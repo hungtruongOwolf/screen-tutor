@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="1000" height="420" role="img" aria-label="Graviton arm64 versus x86_64 on AWS Lambda: service time per turn 207 versus 215 milliseconds, compute cost per 1000 turns 0.0057 versus 0.0074 dollars, 22 percent cheaper">
+  <defs>
+    <style>
+      .bg { fill: #0e1320; }
+      .panel { fill: #121a2b; stroke: #2a3552; stroke-width: 1.5; }
+      .title { font: 700 22px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .sub { font: 400 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .h { font: 700 17px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .nm { font: 600 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .num { font: 700 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #08241a; }
+      .numw { font: 700 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .small { font: 400 12.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .big { font: 700 56px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #3ddc97; }
+      .track { fill: #1b2540; }
+      .arm { fill: #3ddc97; }
+      .x86 { fill: #5b8cff; }
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="420" rx="18"/>
+  <text class="title" x="30" y="44">Graviton against x86 on AWS Lambda</text>
+  <text class="sub" x="30" y="66">The same code and image, 2048 MB, 90 timed turns on each, the region proposer on 1080p captures.</text>
+
+  <rect class="panel" x="20" y="90" width="470" height="310" rx="16"/>
+  <text class="h" x="44" y="124">Service time per turn, mean</text>
+  <text class="nm" x="44" y="168">arm64</text>
+  <rect class="track" x="130" y="150" width="320" height="28" rx="8"/><rect class="arm" x="130" y="150" width="309" height="28" rx="8"/><text class="num" x="144" y="170">207 ms</text>
+  <text class="nm" x="44" y="212">x86_64</text>
+  <rect class="track" x="130" y="194" width="320" height="28" rx="8"/><rect class="x86" x="130" y="194" width="320" height="28" rx="8"/><text class="numw" x="144" y="214" style="fill:#0e1320">215 ms</text>
+  <text class="sub" x="44" y="268" style="fill:#eef1f8;font-weight:600">About 4 % faster on Graviton.</text>
+  <text class="small" x="44" y="296">p95: 262 ms against 273 ms. The gap is small and the x86 fleet</text>
+  <text class="small" x="44" y="314">varies from call to call, so it is not quoted as a precise number.</text>
+  <text class="small" x="44" y="352">The model call (seconds, billed by Nebius) is what a turn really</text>
+  <text class="small" x="44" y="370">costs; the OpenCV part is the same speed on either chip.</text>
+
+  <rect class="panel" x="510" y="90" width="470" height="310" rx="16"/>
+  <text class="h" x="534" y="124">Compute cost per 1000 turns</text>
+  <text class="nm" x="534" y="168">arm64</text>
+  <rect class="track" x="620" y="150" width="320" height="28" rx="8"/><rect class="arm" x="620" y="150" width="246" height="28" rx="8"/><text class="num" x="634" y="170">0.0057 USD</text>
+  <text class="nm" x="534" y="212">x86_64</text>
+  <rect class="track" x="620" y="194" width="320" height="28" rx="8"/><rect class="x86" x="620" y="194" width="320" height="28" rx="8"/><text class="numw" x="634" y="214" style="fill:#0e1320">0.0074 USD</text>
+  <text class="big" x="534" y="300">22 %</text>
+  <text class="sub" x="680" y="278" style="fill:#eef1f8;font-weight:600">cheaper per turn</text>
+  <text class="small" x="680" y="298">1.33 against 1.67 microdollars per GB-second.</text>
+  <text class="small" x="534" y="352">Service time x memory x us-east-1 price, plus the request charge.</text>
+  <text class="small" x="534" y="370">One region, one memory size, six frames, one afternoon.</text>
+</svg>

@@ -122,7 +122,7 @@ npm start          # EXPLAIN_BACKEND_URL defaults to http://127.0.0.1:8000
 
 ## Built with
 
-- **OpenCV 5**: the perception layer. Contours and text-line merging for regions, a Hough transform and closed-shape tracing for the sides of a drawing, texture statistics for pictures and free space, and a block-based change detector on a live frame stream. Code: `backend/app/regions.py`, `desktop/src/follow/`.
+- **OpenCV 5**: the perception layer. Contours and text-line merging for regions, a Hough transform and closed-shape tracing for the sides of a drawing, texture statistics for pictures and free space. Code: `backend/app/regions.py`. The block-based change detector that follows a page lives in the desktop client (`desktop/src/follow/`).
 - **Nebius Token Factory**: the vision turns. DeepSeek V4.1 Flash as the default and Qwen3.8 as a second model asked when the first is slow (hedged requests), compared with four other models on the same cases.
 - **NVIDIA Nemotron**: Nemotron-3-Super turns each step into natural speech, with reasoning off, and every rewrite is checked so it cannot lose a number or add a claim. Code: `backend/app/narration.py`.
 - **Tavily**: when the screen does not hold a fact, the model asks for a web search and the answer shows its sources.
