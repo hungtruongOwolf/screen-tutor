@@ -29,45 +29,7 @@ One engine serves several uses:
 
 ## 2. System
 
-```mermaid
-flowchart TB
-  subgraph Client["Clients"]
-    WIN["Windows app: overlay, chat, voice, watcher"]
-    EXT["Browser extension: DOM and pixels together"]
-    DESK["macOS and Linux apps"]
-    SDK["Embeddable SDK for software vendors"]
-  end
-  subgraph Edge["On the user's machine"]
-    CAP["Capture and change detection"]
-    STT["Speech to text (whisper.cpp)"]
-    TTS["Text to speech (Piper)"]
-    RED["Redaction of sensitive regions before upload"]
-  end
-  subgraph Gateway["Gateway"]
-    AUTH["Authentication, rate limits"]
-    TEN["Tenants: keys, quotas, audit log"]
-  end
-  subgraph Brain["Agent graph"]
-    PER["Perception: OpenCV 5 regions"]
-    UND["Understanding: vision model"]
-    KNOW["Knowledge: just-in-time retrieval"]
-    PLAN["Planner: steps, drawings, goal, verdict"]
-    VER["Verifier"]
-    NAR["Narrator: Nemotron"]
-  end
-  subgraph Models["Models"]
-    NEB["Nebius Token Factory: DeepSeek, Qwen"]
-    NVD["NVIDIA Nemotron"]
-    NVV["NVIDIA vision endpoint"]
-  end
-  subgraph Ops["Operations"]
-    OBS["Metrics, traces, dashboards"]
-    EVAL["Evaluation suites and CI"]
-  end
-  Client --> Edge --> Gateway --> Brain --> Models
-  Brain --> Ops
-  Brain -->|"steps, drawings, speech"| Client
-```
+<p align="center"><img src="docs/img/system-target.svg" alt="The full Sherpa system" width="100%"></p>
 
 The **client** keeps the conversation, the goal, the drawings and the regions of the last capture, and sends them with each turn, so the **backend is stateless** and scales horizontally. Speech recognition and synthesis run on the user's computer: no audio leaves it.
 
@@ -75,20 +37,7 @@ The **client** keeps the conversation, the goal, the drawings and the regions of
 
 A turn is a small graph of specialised nodes with explicit state, not one prompt. Each node has a typed input and output, is tested by itself and can be replaced.
 
-```mermaid
-stateDiagram-v2
-  [*] --> Perceive
-  Perceive --> Understand: numbered regions
-  Understand --> Retrieve: product knowledge needed
-  Understand --> Plan: enough to answer
-  Retrieve --> Plan: facts with sources
-  Plan --> Verify: steps and chosen regions
-  Verify --> Plan: a step contradicts the screen or the goal
-  Verify --> Present: steps accepted
-  Present --> Watch: drawings and speech delivered
-  Watch --> Perceive: the page changed and settled
-  Watch --> [*]: goal done, or the user ended the task
-```
+<p align="center"><img src="docs/img/agent-graph.svg" alt="The agent graph of a turn" width="100%"></p>
 
 | Node | Responsibility |
 |---|---|
@@ -119,7 +68,7 @@ The task state is small and explicit: the goal in one sentence, the verdict of t
 - **Model Context Protocol server.** Sherpa exposes `explain_screen`, `locate_control`, `is_this_the_right_page` and `follow_task` as MCP tools, so coding agents and browser agents can use it as their eyes and pointer. It is a thin adapter over the same backend.
 - **Retrieval tools.** Search, extract, map and crawl (Tavily), called by the planner when it decides it needs facts.
 - **Visual aids.** Named drawing tools the planner can call (a proof, a bar model, a number line), each producing exact geometry, so the model does not draw by guessing coordinates.
-- **Action tools.** An opt-in "do it for me" mode for reversible actions, with per-action approval and an audit trail. By default the tutor points and never clicks.
+- **No action tools, by design.** Sherpa is an instructor, not an operator: it shows where to act and the user acts. Agents that click for the user already exist (a CLI, a computer-use agent); a guide is useful because the user stays in control, sees where things are, and learns the interface.
 
 ## 5. Knowledge: retrieval at task time
 

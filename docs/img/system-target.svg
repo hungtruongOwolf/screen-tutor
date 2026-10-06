@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" width="1000" height="540" role="img" aria-label="The full Sherpa system: clients, edge, gateway, agent graph, models and operations">
+  <defs>
+    <style>
+      .bg { fill: #0e1320; }
+      .zone { fill: #121a2b; stroke: #2a3552; stroke-width: 1.5; }
+      .zt { font: 700 12.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #ff6b4a; letter-spacing: 1.5px; }
+      .box { fill: #1b2540; stroke: #34416a; stroke-width: 1.3; }
+      .boxa { fill: #1b2540; stroke: #ff6b4a; stroke-width: 1.6; }
+      .h { font: 700 14.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .p { font: 400 12px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .wire { fill: none; stroke: #4a5b92; stroke-width: 2.2; stroke-linecap: round; }
+      .ah { fill: #4a5b92; }
+      .ops { fill: #121a2b; stroke: #2a3552; stroke-width: 1.5; stroke-dasharray: 6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="540" rx="18"/>
+
+  <!-- 1 clients -->
+  <rect class="zone" x="20" y="20" width="176" height="400" rx="14"/>
+  <text class="zt" x="36" y="46">CLIENTS</text>
+  <rect class="boxa" x="36" y="62" width="144" height="66" rx="10"/>
+  <text class="h" x="48" y="88">Windows app</text><text class="p" x="48" y="108">overlay, chat, voice</text>
+  <rect class="box" x="36" y="140" width="144" height="66" rx="10"/>
+  <text class="h" x="48" y="166">Browser extension</text><text class="p" x="48" y="186">DOM and pixels</text>
+  <rect class="box" x="36" y="218" width="144" height="66" rx="10"/>
+  <text class="h" x="48" y="244">macOS and Linux</text><text class="p" x="48" y="264">desktop apps</text>
+  <rect class="box" x="36" y="296" width="144" height="66" rx="10"/>
+  <text class="h" x="48" y="322">Vendor SDK</text><text class="p" x="48" y="342">embed in any product</text>
+  <text class="p" x="36" y="394">Agents call it through MCP</text>
+
+  <!-- 2 edge -->
+  <rect class="zone" x="216" y="20" width="176" height="400" rx="14"/>
+  <text class="zt" x="232" y="46">ON THE DEVICE</text>
+  <rect class="box" x="232" y="62" width="144" height="66" rx="10"/>
+  <text class="h" x="244" y="88">Capture</text><text class="p" x="244" y="108">change detection</text>
+  <rect class="box" x="232" y="140" width="144" height="66" rx="10"/>
+  <text class="h" x="244" y="166">Redaction</text><text class="p" x="244" y="186">secrets blurred first</text>
+  <rect class="box" x="232" y="218" width="144" height="66" rx="10"/>
+  <text class="h" x="244" y="244">Speech to text</text><text class="p" x="244" y="264">whisper.cpp</text>
+  <rect class="box" x="232" y="296" width="144" height="66" rx="10"/>
+  <text class="h" x="244" y="322">Text to speech</text><text class="p" x="244" y="342">Piper</text>
+
+  <!-- 3 gateway -->
+  <rect class="zone" x="412" y="20" width="136" height="400" rx="14"/>
+  <text class="zt" x="428" y="46">GATEWAY</text>
+  <rect class="box" x="428" y="62" width="104" height="92" rx="10"/>
+  <text class="h" x="440" y="88">Auth</text><text class="p" x="440" y="108">tokens</text><text class="p" x="440" y="124">rate limits</text>
+  <rect class="box" x="428" y="168" width="104" height="92" rx="10"/>
+  <text class="h" x="440" y="194">Tenants</text><text class="p" x="440" y="214">keys, quotas</text><text class="p" x="440" y="230">audit log</text>
+  <rect class="box" x="428" y="274" width="104" height="92" rx="10"/>
+  <text class="h" x="440" y="300">Caches</text><text class="p" x="440" y="320">regions</text><text class="p" x="440" y="336">retrieval</text>
+
+  <!-- 4 agent graph -->
+  <rect class="zone" x="568" y="20" width="236" height="400" rx="14"/>
+  <text class="zt" x="584" y="46">AGENT GRAPH</text>
+  <rect class="boxa" x="584" y="62" width="204" height="50" rx="10"/>
+  <text class="h" x="596" y="84">Perceive</text><text class="p" x="596" y="101">OpenCV 5 regions</text>
+  <rect class="box" x="584" y="122" width="204" height="50" rx="10"/>
+  <text class="h" x="596" y="144">Understand and plan</text><text class="p" x="596" y="161">vision model, goal, verdict</text>
+  <rect class="box" x="584" y="182" width="204" height="50" rx="10"/>
+  <text class="h" x="596" y="204">Retrieve</text><text class="p" x="596" y="221">just-in-time, with sources</text>
+  <rect class="box" x="584" y="242" width="204" height="50" rx="10"/>
+  <text class="h" x="596" y="264">Verify</text><text class="p" x="596" y="281">against regions and goal</text>
+  <rect class="box" x="584" y="302" width="204" height="50" rx="10"/>
+  <text class="h" x="596" y="324">Narrate</text><text class="p" x="596" y="341">Nemotron, guarded</text>
+  <rect class="box" x="584" y="362" width="204" height="44" rx="10"/>
+  <text class="h" x="596" y="383">Router</text><text class="p" x="596" y="399">teacher, guide, coach</text>
+
+  <!-- 5 models -->
+  <rect class="zone" x="824" y="20" width="156" height="400" rx="14"/>
+  <text class="zt" x="840" y="46">MODELS</text>
+  <rect class="box" x="840" y="62" width="124" height="92" rx="10"/>
+  <text class="h" x="852" y="88">Nebius</text><text class="p" x="852" y="108">Token Factory</text><text class="p" x="852" y="124">hedged, routed</text>
+  <rect class="box" x="840" y="168" width="124" height="92" rx="10"/>
+  <text class="h" x="852" y="194">NVIDIA</text><text class="p" x="852" y="214">Nemotron, vision</text><text class="p" x="852" y="230">endpoint</text>
+  <rect class="box" x="840" y="274" width="124" height="92" rx="10"/>
+  <text class="h" x="852" y="300">Tavily</text><text class="p" x="852" y="320">search, extract,</text><text class="p" x="852" y="336">crawl</text>
+
+  <!-- wires -->
+  <path class="wire" d="M196 220 L216 220"/><path class="ah" d="M210 214 L218 220 L210 226 Z"/>
+  <path class="wire" d="M392 220 L412 220"/><path class="ah" d="M406 214 L414 220 L406 226 Z"/>
+  <path class="wire" d="M548 220 L568 220"/><path class="ah" d="M562 214 L570 220 L562 226 Z"/>
+  <path class="wire" d="M804 220 L824 220"/><path class="ah" d="M818 214 L826 220 L818 226 Z"/>
+
+  <!-- operations strip -->
+  <rect class="ops" x="20" y="436" width="960" height="84" rx="14"/>
+  <text class="zt" x="40" y="462">OPERATIONS</text>
+  <text class="h" x="40" y="486">Metrics and traces</text><text class="p" x="40" y="504">latency, cost per task, alarms</text>
+  <text class="h" x="300" y="486">Evaluation in CI</text><text class="p" x="300" y="504">regions, tasks, narration, real sites</text>
+  <text class="h" x="620" y="486">Deployment</text><text class="p" x="620" y="504">Lambda and ECS on Graviton, per tenant</text>
+</svg>

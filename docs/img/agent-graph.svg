@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="1000" height="400" role="img" aria-label="The agent graph of a turn: perceive, understand, retrieve, plan, verify, present, watch">
+  <defs>
+    <style>
+      .bg { fill: #0e1320; }
+      .node { fill: #1b2540; stroke: #34416a; stroke-width: 1.4; }
+      .key { fill: #1b2540; stroke: #ff6b4a; stroke-width: 1.8; }
+      .opt { fill: #141b2e; stroke: #34416a; stroke-width: 1.4; stroke-dasharray: 5 4; }
+      .h { font: 700 16px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .p { font: 400 12.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .e { fill: none; stroke: #4a5b92; stroke-width: 2.2; stroke-linecap: round; }
+      .eb { fill: none; stroke: #ff6b4a; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 7 6; }
+      .ah { fill: #4a5b92; }
+      .ahb { fill: #ff6b4a; }
+      .el { font: 600 11.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #c9d1e6; }
+      .elb { font: 600 11.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #ff8f78; }
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="400" rx="18"/>
+
+  <!-- top row -->
+  <rect class="key" x="30" y="60" width="200" height="80" rx="12"/>
+  <text class="h" x="46" y="90">Perceive</text>
+  <text class="p" x="46" y="111">OpenCV 5: numbered regions</text>
+  <text class="p" x="46" y="127">from the pixels</text>
+
+  <rect class="node" x="280" y="60" width="200" height="80" rx="12"/>
+  <text class="h" x="296" y="90">Understand</text>
+  <text class="p" x="296" y="111">The vision model reads the</text>
+  <text class="p" x="296" y="127">picture and the regions</text>
+
+  <rect class="opt" x="530" y="60" width="200" height="80" rx="12"/>
+  <text class="h" x="546" y="90">Retrieve</text>
+  <text class="p" x="546" y="111">Facts the screen does not</text>
+  <text class="p" x="546" y="127">hold, with sources</text>
+
+  <rect class="node" x="780" y="60" width="190" height="80" rx="12"/>
+  <text class="h" x="796" y="90">Plan</text>
+  <text class="p" x="796" y="111">Steps, drawings, goal and</text>
+  <text class="p" x="796" y="127">a verdict on progress</text>
+
+  <!-- bottom row (right to left) -->
+  <rect class="node" x="780" y="250" width="190" height="80" rx="12"/>
+  <text class="h" x="796" y="280">Verify</text>
+  <text class="p" x="796" y="301">Each step against the</text>
+  <text class="p" x="796" y="317">regions and the goal</text>
+
+  <rect class="node" x="530" y="250" width="200" height="80" rx="12"/>
+  <text class="h" x="546" y="280">Present</text>
+  <text class="p" x="546" y="301">Stream, place, animate,</text>
+  <text class="p" x="546" y="317">and say it out loud</text>
+
+  <rect class="key" x="280" y="250" width="200" height="80" rx="12"/>
+  <text class="h" x="296" y="280">Watch</text>
+  <text class="p" x="296" y="301">Sees the page change and</text>
+  <text class="p" x="296" y="317">settle, clears stale marks</text>
+
+  <rect class="node" x="30" y="250" width="200" height="80" rx="12"/>
+  <text class="h" x="46" y="280">Done</text>
+  <text class="p" x="46" y="301">Goal reached, or the</text>
+  <text class="p" x="46" y="317">user ended the task</text>
+
+  <!-- edges top row -->
+  <path class="e" d="M230 100 L278 100"/><path class="ah" d="M272 94 L280 100 L272 106 Z"/>
+  <path class="e" d="M480 100 L528 100"/><path class="ah" d="M522 94 L530 100 L522 106 Z"/>
+  <path class="e" d="M730 100 L778 100"/><path class="ah" d="M772 94 L780 100 L772 106 Z"/>
+  <!-- understand straight to plan when no facts are needed -->
+  <path class="e" d="M380 60 C 380 22, 875 22, 875 58"/><path class="ah" d="M869 52 L875 60 L881 52 Z"/>
+  <text class="el" x="628" y="34" text-anchor="middle">enough to answer</text>
+
+  <!-- plan to verify -->
+  <path class="e" d="M875 140 L875 248"/><path class="ah" d="M869 242 L875 250 L881 242 Z"/>
+  <!-- verify back to plan -->
+  <path class="eb" d="M955 250 L955 140"/><path class="ahb" d="M949 146 L955 138 L961 146 Z"/>
+  <text class="elb" x="948" y="200" text-anchor="end" transform="rotate(-90 948 200)">a step does not match</text>
+
+  <!-- verify to present, present to watch -->
+  <path class="e" d="M780 290 L732 290"/><path class="ah" d="M738 284 L730 290 L738 296 Z"/>
+  <text class="el" x="755" y="281" text-anchor="middle">accepted</text>
+  <path class="e" d="M530 290 L482 290"/><path class="ah" d="M488 284 L480 290 L488 296 Z"/>
+
+  <!-- watch back to perceive: the page changed -->
+  <path class="e" d="M380 250 C 380 205, 130 205, 130 142"/><path class="ah" d="M124 148 L130 140 L136 148 Z"/>
+  <text class="el" x="256" y="204" text-anchor="middle">the page changed and settled</text>
+
+  <!-- watch to done -->
+  <path class="e" d="M280 290 L232 290"/><path class="ah" d="M238 284 L230 290 L238 296 Z"/>
+  <text class="el" x="256" y="281" text-anchor="middle">finished</text>
+
+  <text class="p" x="30" y="378" style="font-size:12px">Dashed outline: used only when the screen is not enough. Orange outline: the two nodes that make Sherpa follow a task by itself.</text>
+</svg>

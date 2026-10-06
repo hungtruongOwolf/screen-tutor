@@ -1,182 +1,77 @@
 # Sherpa
 
-**An AI agent that sees your screen, knows what you are trying to do, and shows you how.** It draws on whatever you are looking at (arrows, highlights, diagrams, a proof that moves), speaks, and follows the task from page to page by itself. Lost in a cloud console with two hundred services? Say "Hey Sherpa, I need an IAM user for my CLI", and it points at the first menu item, notices when the page changes, and points at the next one. Watching a lecture you cannot follow? It draws the proof on top of the video.
+**The AI guide that sees your screen, points at what to do next, and walks with you to the end.**
 
-You do not paste a screenshot into a chatbot and hunt for the next click: the guide shares your screen, the answer is a place on the screen, and it is there at the next page.
+<p align="center"><img src="docs/img/loop.svg" alt="Sherpa sees the page, understands the goal, points at the next step, and follows you to the next page" width="100%"></p>
 
-OpenCV 5 finds what is really on the screen (numbered regions with pixel boxes), a vision model on Nebius Token Factory chooses regions and writes the steps, an NVIDIA Nemotron model turns each step into natural speech, Tavily supplies facts the screen does not hold, and the backend runs on AWS Graviton. The design of the full product (an agent graph with a verifier, MCP tools, retrieval at task time, tenants, a browser extension, an embeddable SDK) is in [`ARCHITECTURE.md`](ARCHITECTURE.md).
+## The problem
 
-**Status:** a working MVP. Voice, chat, drawing, task following, a public web playground and the Graviton backend run end to end; the evaluations are in `backend/evaluation/` (31 single-picture cases and three multi-screen tasks). It can still be wrong, which is why the evaluations, the debug view and the log exist. Open work: `.scratch/sherpa/issues/`.
+Ask any AI "how do I create an IAM user for my CLI?" and you get correct steps, and still no idea where they are. The menu is called something slightly different. The button is on another page. So you scroll, you guess, you paste a screenshot and ask again, and again at the next page.
 
-Licence: MIT (`LICENSE`). Notes for the hackathon feedback forms: `FEEDBACK.md`.
+Sherpa is the guide that **sees the page you are on and shows you**: the box, the arrow, the next page, until you are done.
+
+## What it does
+
+- **Sees** the screen you are looking at, right now, and finds what is really on it with OpenCV 5.
+- **Understands** the goal ("create an IAM user with an access key") and keeps it across pages.
+- **Points** at the next step on your screen: a box, an arrow, a highlighted line, a diagram, a proof that moves.
+- **Follows** you: when you click and the page changes, the old marks disappear at once and the next step appears, without you asking again.
+- **Talks**: say "Hey Sherpa" and ask. Speech recognition and the voice run on your computer.
+
+It teaches too: ask why the Pythagorean theorem is true and it draws the proof on top of the video that shows the triangle.
+
+<!-- demo: add the video link and two GIFs (guided IAM task, animated proof) here -->
+
+## Try it
+
+**In the browser, nothing to install:** the [web playground](https://yz6et5qn3u2w247zc2rcndjxqa0tcgso.lambda-url.us-east-1.on.aws/) has sample screens, a made-up cloud console and a three-page task.
+
+**On Windows, two steps:**
+
+1. Download **Sherpa-Setup** from the [latest release](https://github.com/hungtruongOwolf/sherpa/releases/latest) and open it (a portable single file is there too). It installs for your user, no admin rights.
+2. The first start downloads the speech models (about 200 MB, once). When the chat says the voice is ready, say **"Hey Sherpa, I need to create an IAM user. Where do I start?"** with a cloud console open, or press Ctrl+Shift+E to type.
+
+The app is not code-signed, so Windows may say "unknown publisher": choose More info, then Run anyway.
 
 ## How it works
 
-```
-message in the chat panel -> capture screen -> POST /explain-turn/stream (with the conversation) -> backend -> steps -> overlay draws them, the chat writes them
-```
+<p align="center"><img src="docs/img/system.svg" alt="The client on your computer, the backend on AWS Graviton, the models and tools" width="100%"></p>
 
-- `desktop/`: Electron + TypeScript app. A chat panel in the corner, global hotkeys, screen capture, and a transparent, always-on-top, click-through overlay that paints the canvas as SVG. Both windows are hidden from screen captures.
-- `backend/`: Python (FastAPI) service. `explain_turn` takes a capture, a question and the current canvas, and returns the explanation and the new canvas. The model sits behind an adapter; tests use a recorded one.
-- Vocabulary (Turn, Capture, Region, Shape, Canvas, Overlay, Explain Turn) is in `CONTEXT.md`.
+1. **OpenCV 5 finds what is on the screen.** Text lines, lines of a drawing, controls, labels, figures and pictures become numbered regions with pixel boxes.
+2. **The vision model chooses, it does not guess.** It picks regions by number and writes the steps, so every mark lands on a real element and never at an invented coordinate.
+3. **Each step is drawn and said.** Captions and arrows are placed clear of text, animated, and rewritten as natural speech.
+4. **The watcher keeps the thread.** The client keeps the goal and the conversation, watches the screen, clears stale marks the moment the page changes, and starts the next step when the page has settled. The backend is stateless.
 
-## Architecture
+## Guide, don't operate
 
-```mermaid
-flowchart LR
-  subgraph PC["Windows PC (desktop/, Electron + TypeScript)"]
-    MIC["Microphone"] --> VAD["Segmenter (VAD)"] --> WH["whisper.cpp (local speech to text)"]
-    WH --> INT["Intent: wake word, commands"]
-    TYPE["Chat panel (typing)"] --> TURN
-    INT --> TURN["Turn: capture screen + question + history + goal"]
-    WATCH["Screen watcher (frame stream, change detector)"] -->|"page changed and settled"| TURN
-    OV["Overlay (click-through SVG: boxes, arrows, proofs)"]
-    PIPER["Piper (local text to speech)"]
-  end
-  TURN -->|"HTTPS, NDJSON stream"| FURL["Lambda Function URL"]
-  subgraph AWS["AWS Lambda arm64 Graviton (backend/, FastAPI)"]
-    FURL --> CV["OpenCV 5 region proposer: text, figures, lines, controls, labels"]
-    CV --> PROMPT["Prompt: image + numbered regions + conversation"]
-    PROMPT --> HEDGE["Hedged model call"]
-    HEDGE --> BUILD["Decision builder: validate, place, stream steps"]
-    TAV["Tavily web lookup"] <--> HEDGE
-    NARR["/narrate: caption to spoken words"]
-  end
-  HEDGE <-->|"OpenAI-compatible"| NEB["Nebius Token Factory (DeepSeek V4.1 Flash, Qwen3.8 as second model)"]
-  NARR <-->|"OpenAI-compatible"| NVD["NVIDIA Nemotron-3-Super on Nebius"]
-  TURN -.->|"each step as it arrives"| NARR
-  NARR -.->|"spoken words"| PIPER
-  BUILD -->|"steps as they are written"| OV
-  BUILD --> PIPER
-  FURL -.-> WEB["Public web playground (same renderer)"]
-  CW["CloudWatch dashboard and metrics"] -.- AWS
-```
+Sherpa shows where to act and **you** act. Agents that click for you already exist (a CLI, a computer-use agent); a guide is useful for the opposite reason. You stay in control, you see where everything is, and you learn the interface you will use again tomorrow. It never clicks, types or changes anything on your behalf.
 
-How the pieces share the work: OpenCV finds what is really on the screen (numbered regions with pixel boxes and line segments); the model only chooses regions by number and writes the teaching, so every drawn shape lands on a real element. **Spoken words.** A caption is written to be read, so the voice would sound like a list. As each step arrives the desktop app asks the backend's `/narrate` for the same step as speech: an NVIDIA Nemotron-3-Super model (through Nebius, reasoning off, about 0.7 s) says what the caption says in natural spoken English, following on from what it said before. It is allowed to rephrase but not to add: a rewrite is dropped, and the caption read instead, if it is slow (2.5 s), fails, runs on, or loses a number of the caption; the model is not told the learner's question, because with it the model started drawing conclusions the screen had not shown. Switch off with `NARRATION=off` (app) or `NARRATION_MODEL=` (backend); other model with `NARRATION_MODEL=`.
+## What we measured
 
-The backend is stateless: the desktop app keeps the conversation, the goal, the canvas and the previous regions and sends them with each turn. Following a task is the desktop's job (see `.scratch/sherpa/architecture-following.md`).
+| | Result | Report |
+|---|---|---|
+| Pointing at the right region, 31 labelled cases, six models | The default model points correctly on all 31; the second model on 30 or 31 | [`backend/evaluation/report.md`](backend/evaluation/report.md) |
+| Whole tasks over several pages, driven like the app drives them | 9 of 9 tasks completed with each of the two models, including leading the learner back after a wrong click | [`backend/evaluation/tasks_report.md`](backend/evaluation/tasks_report.md) |
+| Graviton against x86 for the backend | About 22 % cheaper per turn, slightly faster | [`backend/evaluation/benchmark.md`](backend/evaluation/benchmark.md) |
 
-**Security and failure handling (Agentic Vision).** The backend requires a bearer token and rate-limits per client; both overlay and chat are excluded from screen captures; only the local watcher and voice windows may capture; no audio leaves the computer (speech recognition and synthesis are local); the model output is validated against the contract and an invalid answer is retried once, then reported as an error; a slow model is hedged with a second one after 4 s; a screen that changes mid-turn marks old drawings stale; the loop pauses itself after three off-track answers, 25 automatic turns or 15 idle minutes.
+## Built with
 
-**Task effectiveness:** `backend/evaluation/tasks_report.md` runs the guide loop (question, then an automatic turn at every page change, with goal, conversation and drawings) on three pages of a console: 9 of 9 multi-screen tasks completed with each of the two models, including leading the learner back after a wrong click; with a vaguely worded goal the first run completed only 3 of 9 (the model took a different, valid path), which the report explains.
+- **OpenCV 5**: the perception layer. Contours and text-line merging for regions, a Hough transform and closed-shape tracing for the sides of a drawing, texture statistics for pictures and free space, and a block-based change detector on a live frame stream. Code: `backend/app/regions.py`, `desktop/src/follow/`.
+- **Nebius Token Factory**: the vision turns. DeepSeek V4.1 Flash as the default and Qwen3.8 as a second model asked when the first is slow (hedged requests), compared with four other models on the same cases.
+- **NVIDIA Nemotron**: Nemotron-3-Super turns each step into natural speech, with reasoning off, and every rewrite is checked so it cannot lose a number or add a claim. Code: `backend/app/narration.py`.
+- **Tavily**: when the screen does not hold a fact, the model asks for a web search and the answer shows its sources.
+- **AWS Graviton**: the backend is a container on Lambda arm64 behind a streaming Function URL, with CloudWatch metrics and a CDK definition in `infra/`.
 
-**Measured on AWS:** Graviton is 22 % cheaper per turn than x86 for the compute part and slightly faster: `backend/evaluation/benchmark.md` (method included, `backend/tools/benchmark.py`).
+## Where it is going
 
-## Install (one file, two steps)
+Sherpa is built for any software, not for one subject: onboarding in enterprise tools, customer support with a shared screen, training from a recorded expert walkthrough, accessibility, and other agents that need eyes. The full design (agent graph, verifier, MCP tools, retrieval at task time, tenants, a browser extension and an SDK) is in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
-1. Download `Sherpa-Setup-<version>.exe` and double-click it. It installs for the current user (no admin rights, nothing else to install) and starts the app. (`Sherpa-Portable-<version>.exe` is the same program as a single file with no install.)
-2. The first time, the app asks in its chat for your **access token** (paste it, press Enter; it is kept in `%APPDATA%\sherpa\.env` and asked for only once) and downloads the speech models by itself (about 200 MB, with a progress line in the chat; you can already type while it does). Then say "Hey Sherpa, ..." or press Ctrl+Shift+E.
+## Documentation
 
-The backend address is built into the download; the access token is never part of it (it is a secret: whoever has it can spend the backend's model budget). Not code-signed, so Windows SmartScreen may say "unknown publisher": More info, Run anyway.
+- [`docs/usage.md`](docs/usage.md): keys, voice, following a task, recording a demo
+- [`docs/development.md`](docs/development.md): run from source, tests, building the installer, deploying
+- [`ARCHITECTURE.md`](ARCHITECTURE.md): the design of the full product
+- [`docs/feedback.md`](docs/feedback.md): notes on the platforms we used
+- [`infra/README.md`](infra/README.md): the AWS deployment
 
-Building the files yourself: `cd desktop; npm install; npm run package -- --url=https://<your function url>.on.aws` writes both files to `desktop/release/`. Tested here on a clean set of data folders: the installer's program starts, downloads the voice models by itself and starts listening without a restart.
-
-## Deploy and measure on AWS
-
-`infra/README.md`: `cd infra; npx cdk deploy` deploys the backend as an arm64 Lambda container with a streaming Function URL and a CloudWatch dashboard. `npx cdk deploy SherpaBenchmark -c benchmark=true` creates the arm64 and x86 pair for the benchmark (destroy it afterwards with `cdk destroy`).
-
-## Requirements
-
-Windows 10 (2004+) or 11, Node.js 22+, Python 3.11+.
-
-## How it feels
-
-The chat panel opens in the corner (Ctrl+Shift+E shows and hides it). Type a message and press Enter: the screen is captured at that moment, the detected regions flash across it (you see it reading), and as soon as the first step is written a cursor glides to the first spot, the drawing is drawn on stroke by stroke and the step is typed into the chat. Later steps arrive while it draws and play on by themselves; pause, step back and forward from the panel or with Ctrl+Shift+, and Ctrl+Shift+. . Click a step in the chat to see it again.
-
-It is a real conversation: ask the next thing without any hotkey, or use the suggested replies under the answer ("Done, what next?"). New chat (the button, or Ctrl+Shift+N) forgets the conversation and the drawings; Clear (Ctrl+Shift+X) only takes the drawings off. Pointing marks (boxes, arrows) go away by themselves when the next step draws something; squares and formulas build up.
-
-It can also follow a task by itself: when you are doing something over several pages ("create an access key"), the tutor states the goal, the chat shows it with a Following switch, and the app watches the screen. When a click changes the page the old marks fade away at once; once the new page has settled the tutor gives the next step with no message from you, says plainly if you went the wrong way, and says when you are done. Ways to stop: the **Following** switch pauses the automatic steps (the goal stays), **End task** or Ctrl+Shift+S ends the task, the Stop button cancels an answer being fetched (and pauses following so it does not start again by itself), New chat forgets everything, and following pauses by itself after 15 minutes without any activity. Moving the mouse is ignored (a box around the pointer is left out of the comparison).
-
-**Voice.** The first time the app starts it downloads a small speech recogniser and a voice (about 200 MB, to `%LOCALAPPDATA%\sherpa`; both run on your computer, no audio leaves it); from a terminal the same download is `npm run setup:voice` in `desktop/`. Then the app is voice first: a small orb at the bottom left listens. The wake word is **Sherpa**; change it with `WAKE_WORD=...` in `.env` (comma separated, the first one names it in the hints, for example `WAKE_WORD=sherpa,jarvis`). Say "Hey Sherpa, ..." and ask; the answer is drawn on the screen and read aloud step by step. While it is working on a task you can say "done", "what is next", "I don't see it" or "stop" without the wake word, and for 12 seconds after it speaks you can just answer it. To type, say "open chat" (the chat is hidden by default); "close chat" puts it away. Other phrases: "new chat", "pause", "resume", "next step", "go back", "clear the marks", "say that again", "be quiet", "talk to me", "mute". The same script also downloads the voice that talks (Piper, a neural voice that runs on your computer; default `en_US-lessac-medium`; another one with `PIPER_VOICE=en_US-ryan-high` in `.env`, downloaded at the next start) and it speaks 1.2 times faster than normal (`SPEECH_RATE=1.2` in `.env`; 1 is normal). Without it the Windows voices are used. English only. Without the recogniser installed the app works as before, with the chat. If the orb says it cannot hear you: it explains why (usually Windows' Settings, Privacy & security, Microphone, "Let desktop apps access your microphone"), looks for another microphone by itself, and a click on the orb tries again; what it heard is shown on the orb, so a missing wake word is easy to see.
-
-Two ways it helps: **teaching** (explain why something is true, with a proof you can watch) and **guiding** (find where to click in an unfamiliar app or cloud console, one action per step, only pointing at what is on screen). The web playground at `/` (served by the backend) offers both with samples and no install.
-
-## Pieces
-
-- `desktop/`: the Windows app (Electron).
-- `backend/`: the Explain Turn service (Python, FastAPI, OpenCV 5). Also serves the public web playground at `/`.
-- `backend/evaluation/`: 31 labelled cases and `python -m evaluation.run --models a,b` (report in `backend/evaluation/report.md`).
-- `infra/`: AWS CDK for the backend as an arm64 (Graviton) Lambda container. See `infra/README.md`.
-
-To use the deployed backend from the desktop app, set `EXPLAIN_BACKEND_URL` to its address and `BACKEND_ACCESS_TOKEN` in `.env`.
-
-## Run it
-
-Backend (terminal 1):
-
-```powershell
-cd backend
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
-.\.venv\Scripts\python.exe -m uvicorn app.server:app --port 8000
-```
-
-Desktop app (terminal 2):
-
-```powershell
-cd desktop
-npm install
-node node_modules/electron/install.js   # only if npm skipped the Electron download
-npm start
-```
-
-Hotkeys:
-
-| Keys | Action |
-|---|---|
-| Ctrl+Shift+E | Show or hide the chat panel (it keeps the conversation) |
-| Ctrl+Shift+N | New chat: forget the conversation and the drawings |
-| Ctrl+Shift+M | Mute or unmute the microphone (voice) |
-| Ctrl+Shift+Space | Talk now: the next thing you say is for the tutor, whatever it starts with (voice) |
-| Ctrl+Shift+. | Next step of an explanation (Ctrl+> on a US keyboard) |
-| Ctrl+Shift+, | Previous step |
-| Ctrl+Shift+X | Take the drawings off the screen (the chat stays) |
-| Ctrl+Shift+S | Stop: cancel the answer being fetched, end the task being followed (the End task button does the same), take the marks off |
-| Ctrl+Shift+R | Recording mode: the tutor's windows can be seen by a screen recorder (OBS, Game Bar), for a demo video; press again to switch off. `RECORDING=1` starts in it |
-| Ctrl+Shift+D | Toggle the debug view: draws every detected region with its number on the last capture |
-| Ctrl+Shift+Q | Quit |
-
-Settings come from environment variables or a local `.env` (copy `.env.example`; `.env` is git-ignored). The backend reads `.env` once when it starts: after editing it, stop the backend (Ctrl+C) and start it again. `MODEL_ADAPTER=fake` gives a canned answer with no network; `MODEL_ADAPTER=nebius` calls the real model (needs `NEBIUS_API_KEY`; `MODEL_NAME` picks the model, default `deepseek-ai/DeepSeek-V4.1-Flash`).
-
-Try the real model on any image without the desktop app:
-
-```powershell
-cd backend
-.\.venv\Scripts\python.exe toolssk_model.py my-screenshot.png "What is x in the triangle?" out.png
-```
-
-## Recording a demo video
-
-The overlay, the chat and the orb are hidden from screen captures on purpose (the AI must never see its own drawings), so a recorder such as OBS or the Windows Game Bar shows a screen without them. Press **Ctrl+Shift+R** (or start with `RECORDING=1`) to switch on recording mode: the windows become visible to recorders. While it is on, the capture sent to the model is taken with the tutor's windows made invisible for that moment (a short blink at each question, so the model still does not see its own marks), and the screen watcher stops comparing while the overlay draws and measures again from the finished picture, so it does not take the drawing for a page change; the panel and the orb are left out of the comparison. A page change in the first second or so after a drawing starts is not noticed in this mode. Press Ctrl+Shift+R again to go back to normal.
-
-## Tests
-
-```powershell
-cd backend; .\.venv\Scripts\python.exe -m pytest      # seam 1: Explain Turn
-cd desktop; npm test                                  # seam 2: overlay renderer
-cd desktop; npm run typecheck
-```
-
-Not covered by automated tests (check by hand): screen capture, global hotkeys, click-through, and that the overlay does not appear in captures.
-
-## Look at what the region proposer finds
-
-```powershell
-cd backend
-.\.venv\Scripts\python.exe tools\draw_regions.py lecture out.png      # fixtures: lecture, lecture_changed, app
-.\.venv\Scripts\python.exe tools\draw_regions.py my-screenshot.png out.png
-```
-
-It saves the image with every numbered region drawn on it and prints the list. `MAX_REGIONS` (default 70) caps the count. Lines of text are separate regions unless packed like a paragraph, so a menu item or a list row can be pointed at.
-
-## Manual smoke test
-
-1. Start the backend and the desktop app as above.
-2. The chat panel opens in the bottom right corner. Type a question about what is on screen and press Enter. With `MODEL_ADAPTER=fake` a red box labelled "Walking skeleton" appears; with `nebius` the model draws and explains (about 3 to 8 seconds).
-   Try "Explain why the Pythagorean theorem is true" on a video with a right triangle: a proof diagram appears beside it and the four triangles slide into their new places. Move through the steps with the panel buttons or Ctrl+Shift+. and Ctrl+Shift+,.
-   Then type a follow-up (no hotkey needed): the conversation and the drawing carry on.
-   Try the guide: open a page you find confusing and ask "I am lost, where do I click to ...?".
-3. Click through the box onto the window underneath: the click must reach that window.
-4. Press Ctrl+Shift+X: the drawings disappear (the chat stays). Press Ctrl+Shift+N: the chat starts empty.
-5. Stop the backend and send a message: the chat says the backend cannot be reached.
-6. With the backend running, send a message, then press Ctrl+Shift+D: numbered, coloured boxes appear over the text blocks, figures and controls on your screen (blue text, green figure, red control). Press Ctrl+Shift+D again to hide them.
+Licence: MIT ([`LICENSE`](LICENSE)).
