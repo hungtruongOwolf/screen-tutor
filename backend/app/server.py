@@ -6,6 +6,7 @@ import json
 import os
 import time
 
+import cv2
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
@@ -100,7 +101,9 @@ def create_app(adapter: ModelAdapter | None = None, narrator: Narrator | None = 
     def health() -> dict[str, object]:
         # `features` lets a client notice a backend that is older than it is (one started before an
         # update ignores fields it does not know, for example the conversation, without a word).
-        return {"status": "ok", "model": chosen.name, "features": FEATURES}
+        # `opencv` says which OpenCV answers: its version and where it was loaded from (the COOL build
+        # lives under /opt/cool), so a judge can see which build is running.
+        return {"status": "ok", "model": chosen.name, "features": FEATURES, "opencv": {"version": cv2.__version__, "path": os.path.dirname(cv2.__file__)}}
 
     speaker = narrator if narrator is not None else build_narrator()
 
