@@ -1,6 +1,11 @@
-# Sherpa
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/img/sherpa-logo-on-dark.svg">
+    <img src="docs/img/sherpa-logo.svg" alt="Sherpa" height="84">
+  </picture>
+</h1>
 
-### Stop reading instructions. Start following the arrow.
+<h3 align="center">Stop reading instructions. Start following the arrow.</h3>
 
 **Sherpa is an AI guide that lives on top of your screen.** It sees exactly what you see, points at what to do next, and stays with you from the first click to the last, in any app, on any page.
 
