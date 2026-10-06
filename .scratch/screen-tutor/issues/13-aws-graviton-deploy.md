@@ -9,7 +9,7 @@
 - [x] Deployment is reproducible from a clean checkout with documented commands (infra/README.md: npm install, cdk bootstrap, cdk deploy)
 - [x] Requests without a valid token are rejected (401, verified live) and rate limits apply (30 per minute per key by default, per instance; a hard spend cap needs an AWS Budget)
 - [x] No image is stored after a turn and logs contain no image data (checked in the live CloudWatch logs: no question, image data or token)
-- [x] Logs are visible in AWS (/screen-tutor/explain); metrics are written in embedded metric format (namespace ScreenTutor) with a dashboard named screen-tutor (metrics take some minutes to appear)
+- [x] Logs are visible in AWS (/screen-tutor/explain); metrics are written in embedded metric format (namespace ScreenTutor) with a dashboard named Sherpa (metrics take some minutes to appear)
 - [ ] The desktop app works against the cloud backend (it sends JPEG and the bearer token; the same calls were verified by script; set EXPLAIN_BACKEND_URL; not yet run by the owner)
 
 ## Deployed (2026-10-03)

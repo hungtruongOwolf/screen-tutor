@@ -1,1 +1,1 @@
-"""screen-tutor backend: the Explain Turn service."""
+"""Sherpa backend: the Explain Turn service."""

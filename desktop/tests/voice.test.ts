@@ -11,10 +11,16 @@ const task: Context = { inConversation: false, taskActive: true };
 afterEach(() => configureWake(DEFAULT_WAKE_WORDS));
 
 describe("the wake word", () => {
-  it("is Nova by default, and tutor still works", () => {
-    expect(wakeLabel()).toBe("Nova");
+  it("is Sherpa by default, and Nova still works", () => {
+    expect(wakeLabel()).toBe("Sherpa");
+    expect(routeUtterance("Hey Sherpa, where do I click?", idle)).toEqual({ kind: "ask", text: "where do I click?" });
     expect(routeUtterance("Hey Nova, where do I click?", idle)).toEqual({ kind: "ask", text: "where do I click?" });
-    expect(routeUtterance("Hey tutor, where do I click?", idle)).toEqual({ kind: "ask", text: "where do I click?" });
+  });
+
+  it("accepts the ways Sherpa is misheard, even split in two", () => {
+    for (const heard of ["Hey Sherper, where do I click?", "Hey Shirpa, where do I click?", "Hey sher pa, where do I click?", "Hey Sharper, where do I click?", "Hello Sherpa where do I click"]) {
+      expect(routeUtterance(heard, idle).kind).toBe("ask");
+    }
   });
 
   it("accepts the ways Nova is misheard, even split in two", () => {
@@ -48,22 +54,22 @@ describe("the wake word", () => {
   it("falls back to the defaults when nothing usable is given", () => {
     configureWake(["", " "]);
 
-    expect(wakeLabel()).toBe("Nova");
+    expect(wakeLabel()).toBe("Sherpa");
   });
 });
 
 describe("who an utterance is for", () => {
   it("answers a request that starts with the wake word, whichever way it is heard", () => {
-    for (const heard of ["Hey Tutor, I need an access key for my app.", "Hey Tudor, I need an access key for my app.", "Okay tutor I need an access key for my app."]) {
+    for (const heard of ["Hey Sherpa, I need an access key for my app.", "Hey Shirpa, I need an access key for my app.", "Okay sherpa I need an access key for my app."]) {
       expect(routeUtterance(heard, idle)).toEqual({ kind: "ask", text: "I need an access key for my app." });
     }
   });
 
-  it("accepts a greeting or two before the wake word and a wake word heard close to tutor", () => {
-    expect(routeUtterance("Hello, hey teacher, can you explain this", idle)).toEqual({ kind: "ask", text: "can you explain this" });
-    expect(routeUtterance("Hello hello tutor what is this", idle)).toEqual({ kind: "ask", text: "what is this" });
-    expect(routeUtterance("Hey tooter, where do I click?", idle)).toEqual({ kind: "ask", text: "where do I click?" });
-    expect(routeUtterance("Hey Tudor", idle)).toEqual({ kind: "wake" });
+  it("accepts a greeting or two before the wake word and a wake word heard close to Sherpa", () => {
+    expect(routeUtterance("Hello, hey sherper, can you explain this", idle)).toEqual({ kind: "ask", text: "can you explain this" });
+    expect(routeUtterance("Hello hello sherpa what is this", idle)).toEqual({ kind: "ask", text: "what is this" });
+    expect(routeUtterance("Hey sharper, where do I click?", idle)).toEqual({ kind: "ask", text: "where do I click?" });
+    expect(routeUtterance("Hey Shurpa", idle)).toEqual({ kind: "wake" });
   });
 
   it("does not take other names for the wake word", () => {
@@ -73,8 +79,8 @@ describe("who an utterance is for", () => {
   });
 
   it("is only listening when it hears the wake word alone", () => {
-    expect(routeUtterance("Hey tutor.", idle)).toEqual({ kind: "wake" });
-    expect(routeUtterance("tutor", idle)).toEqual({ kind: "wake" });
+    expect(routeUtterance("Hey sherpa.", idle)).toEqual({ kind: "wake" });
+    expect(routeUtterance("sherpa", idle)).toEqual({ kind: "wake" });
   });
 
   it("ignores speech that is not for it (a video, a conversation in the room)", () => {
@@ -108,7 +114,7 @@ describe("commands", () => {
 
   it("opens and closes the chat by voice, with or without the wake word", () => {
     expect(command("Open chat")).toBe("open-chat");
-    expect(command("Hey tutor, open the chat window")).toBe("open-chat");
+    expect(command("hey sherpa, open the chat window")).toBe("open-chat");
     expect(command("Show chat please")).toBe("open-chat");
     expect(command("Let me type")).toBe("open-chat");
     expect(command("I want to type")).toBe("open-chat");
@@ -119,28 +125,28 @@ describe("commands", () => {
   it("needs the wake word, a conversation or a task for the commands that could be said by accident", () => {
     expect(command("stop")).toBe("ignore");
     expect(command("next step")).toBe("ignore");
-    expect(command("Hey tutor, stop")).toBe("stop");
+    expect(command("hey sherpa, stop")).toBe("stop");
     expect(command("stop", task)).toBe("stop");
     expect(command("next step", task)).toBe("next-step");
     expect(command("end the task", task)).toBe("stop");
   });
 
   it("understands the rest of the commands", () => {
-    expect(command("hey tutor new chat")).toBe("new-chat");
-    expect(command("hey tutor start over")).toBe("new-chat");
-    expect(command("hey tutor clear the marks")).toBe("clear-marks");
-    expect(command("hey tutor pause")).toBe("pause-following");
-    expect(command("hey tutor resume following")).toBe("resume-following");
-    expect(command("hey tutor go back")).toBe("previous-step");
-    expect(command("hey tutor say that again")).toBe("repeat");
-    expect(command("hey tutor be quiet")).toBe("quiet");
-    expect(command("hey tutor talk to me")).toBe("speak");
-    expect(command("hey tutor mute")).toBe("mute");
+    expect(command("hey sherpa new chat")).toBe("new-chat");
+    expect(command("hey sherpa start over")).toBe("new-chat");
+    expect(command("hey sherpa clear the marks")).toBe("clear-marks");
+    expect(command("hey sherpa pause")).toBe("pause-following");
+    expect(command("hey sherpa resume following")).toBe("resume-following");
+    expect(command("hey sherpa go back")).toBe("previous-step");
+    expect(command("hey sherpa say that again")).toBe("repeat");
+    expect(command("hey sherpa be quiet")).toBe("quiet");
+    expect(command("hey sherpa talk to me")).toBe("speak");
+    expect(command("hey sherpa mute")).toBe("mute");
   });
 
   it("does not take a question for a command", () => {
-    expect(routeUtterance("Hey tutor, why does the next step work?", idle).kind).toBe("ask");
-    expect(routeUtterance("Hey tutor, how do I stop the server?", idle).kind).toBe("ask");
+    expect(routeUtterance("hey sherpa, why does the next step work?", idle).kind).toBe("ask");
+    expect(routeUtterance("hey sherpa, how do I stop the server?", idle).kind).toBe("ask");
   });
 });
 

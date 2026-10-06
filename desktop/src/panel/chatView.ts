@@ -72,7 +72,7 @@ export class ChatView {
 
     const bar = el("div", "bar");
     const brand = el("div", "brand");
-    brand.append(el("span", "dot"), document.createTextNode("screen-tutor"));
+    brand.append(el("span", "dot"), document.createTextNode("Sherpa"));
     const actions = el("div", "actions");
     actions.append(
       this.action("New chat", "New chat (Ctrl+Shift+N): forgets this conversation and the drawings", () => this.commands.newChat()),

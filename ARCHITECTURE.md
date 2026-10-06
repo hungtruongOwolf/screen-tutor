@@ -1,6 +1,6 @@
-# screen-tutor: design
+# Sherpa: design
 
-screen-tutor is an agent that **sees the screen the way the user sees it, knows what the user is trying to do, and shows them how**. It draws on the screen (arrows, highlights, diagrams, a proof that moves), speaks, and follows the task from page to page without being asked again.
+Sherpa is an agent that **sees the screen the way the user sees it, knows what the user is trying to do, and shows them how**. It draws on the screen (arrows, highlights, diagrams, a proof that moves), speaks, and follows the task from page to page without being asked again.
 
 This is the design of the system. The repository holds the implementation as it grows; measured results live next to the code (`backend/evaluation/`), not here, so this document does not go stale with every run.
 
@@ -10,7 +10,7 @@ This is the design of the system. The repository holds the implementation as it 
 
 People get lost in software: a cloud console with hundreds of services, an enterprise tool, a design application, a form with a dozen steps, a lecture video whose proof they cannot follow. The usual remedy is a screenshot pasted into a chatbot, a paragraph back, a click, and the same again at the next page. The chatbot never sees the page the user is on now, and its answer never points at anything.
 
-screen-tutor is built on three ideas:
+Sherpa is built on three ideas:
 
 1. **It shares the screen.** The context is what the user sees, now, not a description of it.
 2. **It points.** An answer is a place on the screen (a box, an arrow, a highlighted line) with a short reason, not a paragraph.
@@ -25,7 +25,7 @@ One engine serves several uses:
 | Customer support | A customer shares their own screen with a support agent or bot, which guides them to the fix |
 | Training and compliance | An expert's walkthrough recorded once and replayed as a guided path with checks at each page |
 | Accessibility | A dense page described and pointed at for people who cannot parse it easily |
-| Agents that use computers | Other agents call screen-tutor as the tool that answers "where is it" and "is this the right page" |
+| Agents that use computers | Other agents call Sherpa as the tool that answers "where is it" and "is this the right page" |
 
 ## 2. System
 
@@ -116,7 +116,7 @@ The task state is small and explicit: the goal in one sentence, the verdict of t
 
 ## 4. Tools and protocols
 
-- **Model Context Protocol server.** screen-tutor exposes `explain_screen`, `locate_control`, `is_this_the_right_page` and `follow_task` as MCP tools, so coding agents and browser agents can use it as their eyes and pointer. It is a thin adapter over the same backend.
+- **Model Context Protocol server.** Sherpa exposes `explain_screen`, `locate_control`, `is_this_the_right_page` and `follow_task` as MCP tools, so coding agents and browser agents can use it as their eyes and pointer. It is a thin adapter over the same backend.
 - **Retrieval tools.** Search, extract, map and crawl (Tavily), called by the planner when it decides it needs facts.
 - **Visual aids.** Named drawing tools the planner can call (a proof, a bar model, a number line), each producing exact geometry, so the model does not draw by guessing coordinates.
 - **Action tools.** An opt-in "do it for me" mode for reversible actions, with per-action approval and an audit trail. By default the tutor points and never clicks.

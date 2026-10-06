@@ -82,7 +82,7 @@ def build_narrator() -> Narrator | None:
 
 
 def create_app(adapter: ModelAdapter | None = None, narrator: Narrator | None = None) -> FastAPI:
-    app = FastAPI(title="screen-tutor backend")
+    app = FastAPI(title="Sherpa backend")
     chosen = adapter or build_adapter()
 
     limiter = SlidingWindowLimiter(int(os.environ.get("RATE_LIMIT_PER_MINUTE", "30")))

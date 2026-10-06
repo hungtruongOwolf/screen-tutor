@@ -1,4 +1,4 @@
-# screen-tutor: decisions (from grilling, 2026-10-03)
+# Sherpa: decisions (from grilling, 2026-10-03)
 
 Product: Windows desktop overlay (Electron + TypeScript). User presses a hotkey and speaks; the app captures the screen, an AI explains it and draws on it. Flagship demo: learning from a CS lecture video; extension demo: teaching a software app.
 

@@ -1,4 +1,4 @@
-# screen-tutor
+# Sherpa
 
 A Windows overlay where a learner asks a question about their screen and an AI answers by drawing on it.
 

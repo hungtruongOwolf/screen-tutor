@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>screen-tutor playground</title>
+  <title>Sherpa playground</title>
   <link rel="stylesheet" href="/static/chat.css" />
   <style>
     :root {
@@ -57,7 +57,7 @@
 </head>
 <body>
   <header>
-    <h1>screen-tutor playground</h1>
+    <h1>Sherpa playground</h1>
     <p>Show it a screen and chat with it. It reads the screen, explains and draws on it step by step, and can guide a newcomer through a complicated page one click at a time. Try a sample, or drop in your own screenshot.</p>
   </header>
 
@@ -110,7 +110,7 @@
         toolbar: { files: ["toolbar"], question: "Which button is Export? Point at it." },
         bullets: { files: ["bullets"], question: "Where does it say that insertion keeps the ordering property?" },
       };
-      var R = window.ScreenTutorRender;
+      var R = window.SherpaRender;
       var $ = function (id) { return document.getElementById(id); };
       var state = { width: 0, height: 0, jpeg: "", canvas: { shapes: [] }, regions: [], stepIndex: -1, turn: 0, sample: null, screen: 0, session: Math.random().toString(36).slice(2) };
       var conversation = [];

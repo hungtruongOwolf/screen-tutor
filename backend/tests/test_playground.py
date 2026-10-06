@@ -30,7 +30,7 @@ def test_the_page_and_its_files_are_served():
     c = client()
 
     page = c.get("/")
-    assert page.status_code == 200 and "screen-tutor playground" in page.text
+    assert page.status_code == 200 and "Sherpa playground" in page.text
     assert "/static/render.js" in page.text
     assert c.get("/static/render.js").status_code == 200
     for sample in ("triangle", "toolbar", "bullets"):
@@ -40,7 +40,7 @@ def test_the_page_and_its_files_are_served():
 def test_the_bundled_renderer_exposes_what_the_page_calls():
     script = (STATIC / "render.js").read_text(encoding="utf-8")
 
-    assert "ScreenTutorRender" in script
+    assert "SherpaRender" in script
     assert "renderCanvasSvg" in script and "renderRegionsDebugSvg" in script
 
 

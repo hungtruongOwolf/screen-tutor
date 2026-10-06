@@ -3,8 +3,9 @@
 
 import { spawn, type ChildProcess } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from "node:fs";
-import { homedir, tmpdir } from "node:os";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { localRoot } from "../paths";
 import { parseWav } from "./audio";
 
 export interface PiperPaths {
@@ -13,7 +14,7 @@ export interface PiperPaths {
 }
 
 export function piperDirectory(): string {
-  return process.env.PIPER_DIR ?? join(process.env.LOCALAPPDATA ?? join(homedir(), "AppData", "Local"), "screen-tutor", "piper");
+  return process.env.PIPER_DIR ?? join(localRoot(), "piper");
 }
 
 function findExe(folder: string): string | undefined {
@@ -51,7 +52,7 @@ export class PiperTts {
   private buffer = "";
   private waiting: ((path: string | Error) => void)[] = [];
   private queue: Promise<unknown> = Promise.resolve();
-  private readonly folder = join(tmpdir(), `screen-tutor-voice-${process.pid}`);
+  private readonly folder = join(tmpdir(), `sherpa-voice-${process.pid}`);
 
   // `rate` is how much faster than normal it talks: 1.2 is a fifth faster.
   constructor(

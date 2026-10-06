@@ -3,7 +3,7 @@
 //
 // The microphone hears everything in the room, including a lecture playing on the screen, so the
 // tutor only reacts when it is addressed:
-//   - the utterance starts with the wake word ("hey tutor ...", "tutor, ..."), or
+//   - the utterance starts with the wake word ("hey Sherpa ...", "Sherpa, ..."), or
 //   - it is part of a conversation that is going on (the tutor has just spoken or been spoken to), or
 //   - a task is being followed and it is one of the short things said while doing a task
 //     ("done", "next", "I don't see it", "stop").
@@ -34,13 +34,13 @@ export interface Context {
   taskActive: boolean; // a task is being followed
 }
 
-// "Tutor" is often heard as something close to it ("Tudor", "teacher"), and people open with one or
+// A wake word is often heard as something close to it ("Tudor", "teacher"), and people open with one or
 // two greetings ("Hello, hey tutor ...").
 const GREETING = /^(?:(?:hey|hay|hi|hello|ok|okay|yo|so|well|um|uh)[\s,.!-]+)+/i;
 
-// The words that call the tutor (the first one is how it is named in hints). "Nova" has two open
-// syllables, which is easy to say whatever the accent; "tutor" works too.
-export const DEFAULT_WAKE_WORDS = ["nova", "tutor"];
+// The words that call the assistant (the first one is how it is named in hints). "Sherpa" has two
+// syllables and is easy to say; "Nova" works too.
+export const DEFAULT_WAKE_WORDS = ["sherpa", "nova"];
 let wakeWords = [...DEFAULT_WAKE_WORDS];
 
 export function configureWake(words: string[]): void {
@@ -49,13 +49,14 @@ export function configureWake(words: string[]): void {
 }
 
 export function wakeLabel(): string {
-  const first = wakeWords[0] ?? "tutor";
+  const first = wakeWords[0] ?? "sherpa";
   return first.charAt(0).toUpperCase() + first.slice(1);
 }
 
 // What recognisers write when they mishear one of the wake words.
 const ALIASES: Record<string, string[]> = {
   tutor: ["teacher", "teachers", "tutoring", "tudo", "tutoria", "tooter", "tudder", "tutter"],
+  sherpa: ["sherper", "shirpa", "shurpa", "sharper", "sherpas", "sherpa's", "surpa", "sherba", "sherpah", "shepa", "sherpar"],
   nova: ["noah", "novah", "nuva", "nover", "novo", "novas", "nova's"],
 };
 

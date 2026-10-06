@@ -5,8 +5,8 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import { createServer } from "node:net";
-import { homedir } from "node:os";
 import { dirname, join } from "node:path";
+import { localRoot } from "../paths";
 
 export interface VoicePaths {
   server: string;
@@ -16,7 +16,7 @@ export interface VoicePaths {
 // Where voice/installer.ts puts things. Not under the project: whisper.cpp cannot open files
 // below a path with accented letters.
 export function voiceDirectory(): string {
-  return process.env.VOICE_DIR ?? join(process.env.LOCALAPPDATA ?? join(homedir(), "AppData", "Local"), "screen-tutor", "whisper");
+  return process.env.VOICE_DIR ?? join(localRoot(), "whisper");
 }
 
 function find(folder: string, name: string): string | undefined {

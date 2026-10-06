@@ -1,12 +1,12 @@
 // Builds what a person downloads, ready to run with nothing else installed:
-//   npm run package -- --url=https://....on.aws    Screen-Tutor-Setup-<version>.exe  (double click: installs for the current user,
-//                      no admin rights, and starts) and Screen-Tutor-Portable-<version>.exe (one file,
+//   npm run package -- --url=https://....on.aws    Sherpa-Setup-<version>.exe  (double click: installs for the current user,
+//                      no admin rights, and starts) and Sherpa-Portable-<version>.exe (one file,
 //                      no install), both in release/.
 //
 // The address of the backend (not a secret) comes from the repository's .env and is written to
 // build/defaults.json, which is packed next to the program, so nobody has to type it. The access token is
 // a secret and is NEVER put in a download: a person adds it to a .env beside the program or in
-// %APPDATA%\screen-tutor\.env. The speech models are not in the file either: the app downloads them
+// %APPDATA%\sherpa\.env. The speech models are not in the file either: the app downloads them
 // (about 200 MB) the first time it starts.
 
 import { spawnSync } from "node:child_process";

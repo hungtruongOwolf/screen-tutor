@@ -110,7 +110,7 @@ await build({
   outfile: "../backend/app/static/render.js",
   platform: "browser",
   format: "iife",
-  globalName: "ScreenTutorRender",
+  globalName: "SherpaRender",
   target: "chrome120",
 });
 

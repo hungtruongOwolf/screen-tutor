@@ -1,6 +1,6 @@
 # Feedback notes (for the Nebius, NVIDIA and Tavily forms)
 
-Collected while building screen-tutor, 2026-10-03 to 2026-10-04. Facts only; each line says what was seen.
+Collected while building Sherpa, 2026-10-03 to 2026-10-04. Facts only; each line says what was seen.
 
 ## Nebius Token Factory
 

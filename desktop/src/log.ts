@@ -1,16 +1,16 @@
 // A log file, so that what happened in a run can be read afterwards (a packaged app has no terminal):
-// %APPDATA%\screen-tutor\logs\app.log. Everything the app prints with console.log / console.error is
+// %APPDATA%\sherpa\logs\app.log. Everything the app prints with console.log / console.error is
 // written there too, with the time. No screenshots, no tokens and no spoken or typed text go into it:
 // only what happened (turns, timings, errors, what the screen watcher saw).
 
 import { appendFileSync, existsSync, mkdirSync, renameSync, statSync } from "node:fs";
-import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { roamingRoot } from "./paths";
 
 const MAX_BYTES = 1_000_000;
 
 export function logDirectory(): string {
-  return join(process.env.APPDATA ?? tmpdir(), "screen-tutor", "logs");
+  return join(roamingRoot(), "logs");
 }
 
 let ready = false;
@@ -43,5 +43,5 @@ export function installConsoleLog(): void {
     original.error(...args);
     logLine("ERROR", text(args));
   };
-  logLine("info ", `---- screen-tutor started (${process.platform}, electron ${process.versions.electron})`);
+  logLine("info ", `---- Sherpa started (${process.platform}, electron ${process.versions.electron})`);
 }

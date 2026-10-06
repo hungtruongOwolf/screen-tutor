@@ -1,4 +1,4 @@
-// Downloads what the voice needs, once, into %LOCALAPPDATA%\screen-tutor: the whisper.cpp program and an
+// Downloads what the voice needs, once, into %LOCALAPPDATA%\sherpa: the whisper.cpp program and an
 // English speech model (to understand you), and the Piper program and an English voice (to talk). Both run
 // on this computer, so no audio ever leaves it. The app does this by itself the first time it starts
 // (about 200 MB); `npm run setup:voice` does the same from a terminal.
@@ -7,16 +7,16 @@
 
 import { spawn } from "node:child_process";
 import { createWriteStream, existsSync, mkdirSync, readdirSync, renameSync, rmSync, statSync } from "node:fs";
-import { homedir } from "node:os";
 import { join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+import { localRoot } from "../paths";
 
 const WHISPER_ZIP = "https://github.com/ggml-org/whisper.cpp/releases/download/v1.9.2/whisper-bin-x64.zip";
 const PIPER_ZIP = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_windows_amd64.zip";
 
 export function dataRoot(): string {
-  return join(process.env.LOCALAPPDATA ?? join(homedir(), "AppData", "Local"), "screen-tutor");
+  return localRoot();
 }
 
 export interface InstallOptions {

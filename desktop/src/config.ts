@@ -3,6 +3,7 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { roamingFolders } from "./paths";
 
 function loadEnvFile(path: string): void {
   if (!existsSync(path)) return;
@@ -64,7 +65,7 @@ export function loadConfig(projectRoot: string): Config {
   // A packaged build: a .env next to the program, or one of the user's own; the backend address baked
   // into the download (resources/defaults.json) comes last, so anything above overrides it.
   loadEnvFile(join(dirname(process.execPath), ".env"));
-  if (process.env.APPDATA) loadEnvFile(join(process.env.APPDATA, "screen-tutor", ".env"));
+  for (const folder of roamingFolders()) loadEnvFile(join(folder, ".env"));
   loadDefaults((process as { resourcesPath?: string }).resourcesPath);
   return {
     backendUrl: (process.env.EXPLAIN_BACKEND_URL ?? "http://127.0.0.1:8000").replace(/\/+$/, ""), // no trailing slash: Function URLs are copied with one
@@ -73,7 +74,7 @@ export function loadConfig(projectRoot: string): Config {
     defaultQuestion: "Explain what I am looking at.",
     narration: process.env.NARRATION !== "off",
     speechRate: Math.min(2, Math.max(0.7, Number(process.env.SPEECH_RATE) || 1.2)),
-    wakeWords: (process.env.WAKE_WORD ?? "nova,tutor").split(",").map((w) => w.trim()).filter(Boolean),
+    wakeWords: (process.env.WAKE_WORD ?? "sherpa,nova").split(",").map((w) => w.trim()).filter(Boolean),
     hotkeys: {
       // Opens and hides the chat.
       explain: "CommandOrControl+Shift+E",

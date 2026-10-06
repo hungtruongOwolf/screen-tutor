@@ -1,7 +1,7 @@
 Status: ready-for-agent
-Feature: screen-tutor
+Feature: Sherpa
 
-# Spec: screen-tutor
+# Spec: Sherpa
 
 ## Problem Statement
 
@@ -9,7 +9,7 @@ A learner who is watching a lecture video, or stuck in an unfamiliar app, cannot
 
 ## Solution
 
-screen-tutor is a Windows desktop overlay. The learner presses a hotkey, speaks (or types) a question, and the app captures the screen at that moment. An AI looks at it and answers by drawing directly on top of the screen: arrows, boxes, highlights, step numbers, labels and small connected diagrams, with a short spoken or captioned explanation. The drawing stays on screen as a persistent canvas across follow-up questions, so the learner can say "now explain the second part" and the AI adds to, edits or removes what it drew before. Capture only happens when the learner asks, and the app always shows when it is capturing.
+Sherpa is a Windows desktop overlay. The learner presses a hotkey, speaks (or types) a question, and the app captures the screen at that moment. An AI looks at it and answers by drawing directly on top of the screen: arrows, boxes, highlights, step numbers, labels and small connected diagrams, with a short spoken or captioned explanation. The drawing stays on screen as a persistent canvas across follow-up questions, so the learner can say "now explain the second part" and the AI adds to, edits or removes what it drew before. Capture only happens when the learner asks, and the app always shows when it is capturing.
 
 Pointing is made reliable by splitting the work: OpenCV 5 finds and numbers candidate regions on the screenshot (text blocks, figures, controls, changed areas), the model chooses regions by number and decides what to draw, and the overlay renders the shapes on those regions. The model is never asked for raw pixel coordinates.
 

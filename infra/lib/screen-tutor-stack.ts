@@ -34,7 +34,7 @@ export class ScreenTutorStack extends cdk.Stack {
 
     const fn = new lambda.DockerImageFunction(this, "ExplainFunction", {
       functionName: "screen-tutor-explain",
-      description: "screen-tutor Explain Turn service (OpenCV 5 + vision model), arm64",
+      description: "Sherpa Explain Turn service (OpenCV 5 + vision model), arm64",
       code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, "..", "..", "backend"), {
         platform: Platform.LINUX_ARM64,
       }),

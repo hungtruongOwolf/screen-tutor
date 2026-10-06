@@ -1,5 +1,5 @@
 {
-  "name": "screen-tutor-desktop",
+  "name": "sherpa-desktop",
   "version": "0.1.0",
   "private": true,
   "description": "Windows overlay: ask about your screen, get answers drawn on it",
@@ -21,10 +21,10 @@
     "typescript": "^5.6.0",
     "vitest": "^3.0.0"
   },
-  "author": "screen-tutor authors",
+  "author": "Sherpa authors",
   "build": {
-    "appId": "com.screentutor.app",
-    "productName": "Screen Tutor",
+    "appId": "com.sherpa.app",
+    "productName": "Sherpa",
     "directories": {
       "output": "release"
     },
@@ -60,10 +60,10 @@
       "perMachine": false,
       "runAfterFinish": true,
       "deleteAppDataOnUninstall": false,
-      "artifactName": "Screen-Tutor-Setup-${version}.${ext}"
+      "artifactName": "Sherpa-Setup-${version}.${ext}"
     },
     "portable": {
-      "artifactName": "Screen-Tutor-Portable-${version}.${ext}"
+      "artifactName": "Sherpa-Portable-${version}.${ext}"
     }
   }
 }

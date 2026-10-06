@@ -37,9 +37,9 @@ Use a real console the viewer will recognise, up to the final confirm button (ne
 
 Install first (the installer file, or `npm start`: the first start downloads the voice models; wait for "The voice is ready"). The chat stays hidden; the orb is at the bottom left.
 
-1. Say: "Hey Nova, explain why the Pythagorean theorem is true." The orb turns amber, then blue: the first step is drawn and read aloud while the next ones are being written. Say nothing while it plays.
+1. Say: "Hey Sherpa, explain why the Pythagorean theorem is true." The orb turns amber, then blue: the first step is drawn and read aloud while the next ones are being written. Say nothing while it plays.
 2. Interrupt with a follow-up: "Why is the empty area the same in both pictures?" (within 12 seconds of it speaking, no wake word needed).
-3. Say "Open chat" to show the transcript and type something; say "Close chat" to hide it. Say "Hey Nova, new chat" to start over.
-4. Guide flow: "Hey Nova, I need an access key for my app. Where do I start?" Then click on the page and say nothing: the old mark fades at once, the next step is read out. Say "I don't see it" or "stop" at any time.
+3. Say "Open chat" to show the transcript and type something; say "Close chat" to hide it. Say "Hey Sherpa, new chat" to start over.
+4. Guide flow: "Hey Sherpa, I need an access key for my app. Where do I start?" Then click on the page and say nothing: the old mark fades at once, the next step is read out. Say "I don't see it" or "stop" at any time.
 
 Tips: keep the microphone away from the speakers' loudest side; a video playing on the screen is heard too, which is why the tutor only reacts to the wake word (or Ctrl+Shift+Space).

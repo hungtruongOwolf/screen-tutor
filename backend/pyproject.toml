@@ -1,7 +1,7 @@
 [project]
-name = "screen-tutor-backend"
+name = "sherpa-backend"
 version = "0.1.0"
-description = "Explain Turn service for screen-tutor"
+description = "Explain Turn service for Sherpa"
 requires-python = ">=3.11"
 dependencies = [
   "fastapi>=0.115",

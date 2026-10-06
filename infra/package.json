@@ -1,8 +1,8 @@
 {
-  "name": "screen-tutor-infra",
+  "name": "sherpa-infra",
   "version": "0.1.0",
   "private": true,
-  "description": "AWS infrastructure for screen-tutor: the backend as an arm64 (Graviton) Lambda container",
+  "description": "AWS infrastructure for Sherpa: the backend as an arm64 (Graviton) Lambda container",
   "scripts": {
     "build": "tsc --noEmit",
     "synth": "cdk synth",

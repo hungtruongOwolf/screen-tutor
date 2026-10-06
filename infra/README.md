@@ -8,7 +8,7 @@ desktop app / web page  --HTTPS-->  Lambda Function URL  -->  FastAPI (OpenCV 5)
                                          +--> CloudWatch Logs + metrics + dashboard
 ```
 
-What is created: one Lambda function (arm64, 2 GB, 120 s timeout) built from `backend/Dockerfile`, its Function URL, a log group (one month retention) and a CloudWatch dashboard named `screen-tutor`. The one-time `cdk bootstrap` also creates the CDK's own storage bucket, container repository and roles.
+What is created: one Lambda function (arm64, 2 GB, 120 s timeout) built from `backend/Dockerfile`, its Function URL, a log group (one month retention) and a CloudWatch dashboard named `Sherpa`. The one-time `cdk bootstrap` also creates the CDK's own storage bucket, container repository and roles.
 
 ## Requirements
 
@@ -49,7 +49,7 @@ If the main model is slow (no step after `HEDGE_AFTER_SECONDS`, default 4), the 
 
 - Logs: CloudWatch log group `/screen-tutor/explain`.
 - Metrics (namespace `ScreenTutor`, from the service's embedded metric lines): `TurnLatencyMs`, `ModelLatencyMs`, `RegionsLatencyMs`, `Attempts`, `Regions`, `Steps`, `DroppedShapes`, `TurnFailures`. Lambda's own `Invocations`, `Errors` and `Duration` come with it.
-- The `screen-tutor` dashboard graphs them.
+- The `Sherpa` dashboard graphs them.
 
 ## Benchmark (Graviton against x86)
 

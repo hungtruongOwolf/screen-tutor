@@ -7,6 +7,7 @@ import { captureScreen } from "./capture";
 import { Conversation } from "./chat/conversation";
 import { loadConfig } from "./config";
 import { installConsoleLog, logDirectory } from "./log";
+import { APP_FOLDER } from "./paths";
 import type { Canvas, OverlayUpdate, PanelEvent, Progress, Region, StreamEvent } from "./contract";
 import { POINTER_KINDS } from "./contract";
 import type { WatcherMessage } from "./follow/watcher";
@@ -18,7 +19,7 @@ import { findPiper } from "./voice/piper";
 import { installVoice } from "./voice/installer";
 import { findVoice, type VoicePaths } from "./voice/whisper";
 
-installConsoleLog(); // everything printed is also kept in %APPDATA%\screen-tutor\logs\app.log
+installConsoleLog(); // everything printed is also kept in %APPDATA%\sherpa\logs\app.log
 const config = loadConfig(join(__dirname, ".."));
 const sessionId = randomUUID();
 
@@ -122,7 +123,7 @@ function createOverlay(): BrowserWindow {
     window.setBounds(bounds);
     window.showInactive();
     window.setBounds(bounds);
-    if (process.env.SCREEN_TUTOR_DEBUG_GEOMETRY) {
+    if (process.env.SHERPA_DEBUG_GEOMETRY) {
       const display = screen.getPrimaryDisplay();
       console.log(
         JSON.stringify({
@@ -157,7 +158,7 @@ function createPanel(showAtStart: boolean): BrowserWindow {
     alwaysOnTop: true,
     show: false,
     backgroundColor: "#14141a",
-    title: "screen-tutor",
+    title: "Sherpa",
     webPreferences: {
       preload: join(__dirname, "panelPreload.js"),
       contextIsolation: true,
@@ -466,7 +467,7 @@ function maybeFinishTurn(): void {
 // and the goal, and plays the answer as it arrives.
 // The cloud backend needs an access token, and a token is a secret that is never part of the download.
 // The first time (no token and a backend that is not on this computer) the chat asks for it, and the
-// next thing typed there is kept in %APPDATA%\screen-tutor\.env, so this happens once.
+// next thing typed there is kept in %APPDATA%\sherpa\.env, so this happens once.
 function needsToken(): boolean {
   return !config.accessToken && !/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])/.test(config.backendUrl);
 }
@@ -483,7 +484,7 @@ function saveToken(text: string): void {
     return;
   }
   try {
-    const folder = join(process.env.APPDATA ?? app.getPath("userData"), "screen-tutor");
+    const folder = join(process.env.APPDATA ?? app.getPath("userData"), APP_FOLDER);
     mkdirSync(folder, { recursive: true });
     writeFileSync(join(folder, ".env"), `BACKEND_ACCESS_TOKEN=${token}
 
@@ -918,7 +919,7 @@ async function setUpVoice(): Promise<void> {
     if (!found) throw new Error("the files are not where they should be");
     startVoice(found);
     console.log("voice setup: done");
-    emit({ type: "auto", text: `The voice is ready. Say "Hey ${config.wakeWords[0] ?? "Nova"}" and ask.` });
+    emit({ type: "auto", text: `The voice is ready. Say "Hey ${config.wakeWords[0] ?? "Sherpa"}" and ask.` });
   } catch (error) {
     emit({ type: "status", text: null });
     emit({ type: "error", text: `I could not set up the voice (${(error as Error).message}). Typing works; restart the app to try again.` });
@@ -988,7 +989,7 @@ app.whenReady().then(() => {
     console.error("Some hotkeys could not be registered (already in use by another app?)");
   }
   console.log(
-    `screen-tutor running. Chat: ${explain}  New chat: ${newChatKey}  Clear drawings: ${clear}  Stop task: ${stop}  Mute mic: ${mute}  Talk now: ${talk}  Next step: ${next}  Previous step: ${previous}  Debug regions: ${debug}  Quit: ${quit}  Backend: ${config.backendUrl}`,
+    `Sherpa running. Chat: ${explain}  New chat: ${newChatKey}  Clear drawings: ${clear}  Stop task: ${stop}  Mute mic: ${mute}  Talk now: ${talk}  Next step: ${next}  Previous step: ${previous}  Debug regions: ${debug}  Quit: ${quit}  Backend: ${config.backendUrl}`,
   );
 });
 
