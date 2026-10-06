@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" width="1000" height="440" role="img" aria-label="COOL against stock OpenCV 5 on Graviton4: region proposer about 5 percent faster, adaptive Gaussian threshold 1.9 times faster, same regions found">
+  <defs>
+    <style>
+      .bg { fill: #0e1320; }
+      .panel { fill: #121a2b; stroke: #2a3552; stroke-width: 1.5; }
+      .title { font: 700 22px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .sub { font: 400 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .h { font: 700 17px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .nm { font: 600 15px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #eef1f8; }
+      .num { font: 700 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #08241a; }
+      .numw { font: 700 14px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #0e1320; }
+      .small { font: 400 12.5px 'Segoe UI', Helvetica, Arial, sans-serif; fill: #97a0b8; }
+      .track { fill: #1b2540; }
+      .cool { fill: #3ddc97; }
+      .stock { fill: #5b8cff; }
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="440" rx="18"/>
+  <text class="title" x="30" y="44">COOL against stock OpenCV 5 on Graviton4</text>
+  <text class="sub" x="30" y="66">Same c8g.xlarge, same Sherpa code, same output (identical regions on all six frames). 90 timed calls per run, two runs.</text>
+
+  <rect class="panel" x="20" y="90" width="470" height="330" rx="16"/>
+  <text class="h" x="44" y="124">Region proposer, mean per turn</text>
+  <text class="nm" x="44" y="170">COOL</text>
+  <rect class="track" x="120" y="152" width="340" height="30" rx="8"/><rect class="cool" x="120" y="152" width="320" height="30" rx="8"/><text class="num" x="134" y="172">46.1 ms</text>
+  <text class="nm" x="44" y="218">stock</text>
+  <rect class="track" x="120" y="200" width="340" height="30" rx="8"/><rect class="stock" x="120" y="200" width="340" height="30" rx="8"/><text class="numw" x="134" y="220">48.8 ms</text>
+  <text class="sub" x="44" y="274" style="fill:#eef1f8;font-weight:600">About 5 % faster, lower p95 in both runs.</text>
+  <text class="small" x="44" y="302">COOL 5.1.0-dev with KleidiCV 0.7.0 and Arm Performance</text>
+  <text class="small" x="44" y="320">Libraries; stock is the opencv-python-headless 5.0.0.93 wheel.</text>
+  <text class="small" x="44" y="360">The proposer also runs Python, Hough and contour tracing that</text>
+  <text class="small" x="44" y="378">COOL does not change, so the gain is smaller than on one operation.</text>
+
+  <rect class="panel" x="510" y="90" width="470" height="330" rx="16"/>
+  <text class="h" x="534" y="124">Single operations, 1080p frame (ms)</text>
+  <text class="nm" x="534" y="162">adaptiveThreshold</text>
+  <rect class="track" x="534" y="170" width="420" height="20" rx="6"/><rect class="cool" x="534" y="170" width="224" height="20" rx="6"/><text class="small" x="764" y="185" style="fill:#eef1f8">COOL 3.85</text>
+  <rect class="track" x="534" y="196" width="420" height="20" rx="6"/><rect class="stock" x="534" y="196" width="420" height="20" rx="6"/><text class="small" x="540" y="211" style="fill:#0e1320;font-weight:700">stock 7.20  (1.9x)</text>
+  <text class="nm" x="534" y="254">findContours</text>
+  <rect class="track" x="534" y="262" width="420" height="20" rx="6"/><rect class="cool" x="534" y="262" width="384" height="20" rx="6"/><text class="small" x="540" y="277" style="fill:#08241a;font-weight:700">COOL 1.51</text>
+  <rect class="track" x="534" y="288" width="420" height="20" rx="6"/><rect class="stock" x="534" y="288" width="420" height="20" rx="6"/><text class="small" x="540" y="303" style="fill:#0e1320;font-weight:700">stock 1.65  (1.1x)</text>
+  <text class="small" x="534" y="346">GaussianBlur 1.2x, resize with INTER_AREA 1.1x faster.</text>
+  <text class="small" x="534" y="366" style="fill:#ff9a4a">One operation went the other way: resize with INTER_LINEAR was</text>
+  <text class="small" x="534" y="384" style="fill:#ff9a4a">3.4x slower in this build (1.03 ms against 0.30 ms).</text>
+</svg>

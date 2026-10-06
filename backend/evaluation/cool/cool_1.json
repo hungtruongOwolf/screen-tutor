@@ -1,0 +1,54 @@
+{
+ "label": "cool",
+ "opencv": "5.1.0-dev",
+ "opencv_file": "/opt/cool/python_3.12/site-packages/cv2/python-3.12/cv2.cpython-312-aarch64-linux-gnu.so",
+ "machine": "aarch64",
+ "python": "3.12.3",
+ "threads": 4,
+ "region_counts": {
+  "bullets.png": 7,
+  "console1.png": 36,
+  "console2.png": 34,
+  "console3.png": 41,
+  "toolbar.png": 12,
+  "triangle.png": 9
+ },
+ "region_proposer_ms": {
+  "mean": 44.83,
+  "p50": 42.98,
+  "p95": 56.82,
+  "n": 90
+ },
+ "ops_ms": {
+  "resize 1920x1080 to 960x540 (INTER_AREA)": {
+   "mean": 0.26,
+   "p50": 0.26,
+   "p95": 0.29,
+   "n": 200
+  },
+  "resize 1920x1080 to 1280x720 (INTER_LINEAR)": {
+   "mean": 1.03,
+   "p50": 1.03,
+   "p95": 1.04,
+   "n": 200
+  },
+  "adaptiveThreshold gaussian 1080p": {
+   "mean": 3.85,
+   "p50": 3.84,
+   "p95": 3.88,
+   "n": 100
+  },
+  "findContours 1080p edges": {
+   "mean": 1.51,
+   "p50": 1.5,
+   "p95": 1.54,
+   "n": 100
+  },
+  "GaussianBlur 5x5 1080p": {
+   "mean": 0.15,
+   "p50": 0.15,
+   "p95": 0.18,
+   "n": 200
+  }
+ }
+}

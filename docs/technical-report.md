@@ -78,15 +78,18 @@ With a vaguely worded goal the first run completed 3 of 9. Most misses were vali
 
 **Graviton against x86** (`benchmark.md`): see the next section.
 
-### Graviton evidence (stock OpenCV 5, not COOL)
+### COOL evidence
 
-![Graviton against x86](img/graviton.png)
+![COOL against stock OpenCV 5 on Graviton4](img/cool.png)
 
-- **Which OpenCV:** the standard `opencv-python-headless` 5.0.0.93 arm64 build from PyPI. The Cloud-Optimized OpenCV Library (COOL) is **not** used in this measurement, so this is evidence of OpenCV 5 on Graviton, not of COOL.
-- **What runs on Graviton:** the whole region proposer (every OpenCV pass above) on a Lambda arm64 function, 2048 MB, OpenCV 5.0.0.93, Python 3.11. The measurement uses a canned model, so the service time is the OpenCV work plus building the answer; no model call is in the number.
-- **Method:** six sample screens scaled to 1920 x 1080 and JPEG-encoded the way the app sends them; one first call, one warm-up round, then 15 rounds (90 timed turns) on each architecture; `tools/benchmark.py`, reproducible with `cdk deploy SherpaBenchmark -c benchmark=true`.
-- **Results:** mean service time 207 ms on arm64 against 215 ms on x86_64 (about 4 % faster); p95 262 ms against 273 ms; compute cost per 1000 turns 0.0057 against 0.0074 USD, **22 % cheaper**.
-- **Baseline:** the identical code and image on x86_64.
+- **COOL version and deployment:** AWS Marketplace "Cloud Optimized OpenCV For AWS Graviton4" (AMI `ami-033e481a24f94c8cb`, Python 3.12 environment under `/opt/cool`), on a `c8g.xlarge` EC2 instance (Graviton4, Neoverse-V2, 4 vCPU, Ubuntu 24.04), us-east-1. `cv2.__version__` reports `5.1.0-dev`, built with `-O3 -mcpu=neoverse-v2`, KleidiCV 0.7.0, Arm Performance Libraries 25.07.1.
+- **Evidence that COOL runs the core workload:** the benchmark imports the unchanged Sherpa region proposer (`app.regions.propose_regions`, every OpenCV pass described in section 3) under the COOL interpreter; the instance's `cv2` resolves to `/opt/cool/python_3.12/site-packages/cv2`, and `cv2.getBuildInformation()` lists KleidiCV and ARMPL as the custom HAL (`evaluation/cool.md`).
+- **Method:** the six sample screens scaled to 1920 x 1080 and JPEG-encoded the way the app sends them; one warm-up round and 90 timed calls per run, two runs, alternating COOL and stock; `tools/cool_bench.py`.
+- **Baseline:** the standard `opencv-python-headless==5.0.0.93` wheel on the same instance with the same code. Both builds find identical regions on all six frames.
+- **Results:** region proposer mean 46.1 ms with COOL against 48.8 ms stock (about 5 % faster, lower p95 in both runs); `adaptiveThreshold` 1.9x faster, `GaussianBlur` 1.2x, `findContours` 1.1x, `resize` with INTER_AREA 1.1x; `resize` with INTER_LINEAR was 3.4x slower in this build.
+- **Architecture:** hybrid. The Lambda function (arm64) runs the same code with the stock wheel, because COOL ships as an AMI; the COOL path is an EC2 Graviton4 instance running the same backend. Lambda arm64 against x86_64 (stock OpenCV, 90 turns each) measured 207 ms against 215 ms and 22 % lower compute cost per 1000 turns (`benchmark.md`).
+
+![Graviton against x86 on AWS Lambda](img/graviton.png)
 
 ### Agentic Vision evidence
 
@@ -105,7 +108,7 @@ With a vaguely worded goal the first run completed 3 of 9. Most misses were vali
 - Wrong goal wording can lead the agent down a valid but unexpected path; the chat shows the goal so the user can correct it.
 - Windows only; English only; speech recognition depends on the microphone and the room.
 - Region proposal on dense or unusual interfaces (custom-drawn controls, tiny icons) is heuristic; learned detectors, text recognition with OpenCV's DNN module, feature matching for icons and homography re-anchoring are not implemented.
-- Graviton benchmark: one region, one memory size, six frames, one afternoon; the speed gap is small and should not be quoted as precise.
+- Benchmarks: one region, one instance size, six frames, one afternoon. The COOL gain on the whole proposer is about 5 % (larger on single operations, negative on one) and the Lambda speed gap is small; neither should be quoted as precise. The deployed Lambda runs stock OpenCV; COOL was measured on EC2.
 - Model quality and latency vary from call to call (the same model took 2 s on one call and 47 s on another).
 
 ## 7. Responsible use
