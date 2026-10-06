@@ -87,7 +87,8 @@ With a vaguely worded goal the first run completed 3 of 9. Most misses were vali
 - **Method:** the six sample screens scaled to 1920 x 1080 and JPEG-encoded the way the app sends them; one warm-up round and 90 timed calls per run, two runs, alternating COOL and stock; `tools/cool_bench.py`.
 - **Baseline:** the standard `opencv-python-headless==5.0.0.93` wheel on the same instance with the same code. Both builds find identical regions on all six frames.
 - **Results:** region proposer mean 46.1 ms with COOL against 48.8 ms stock (about 5 % faster, lower p95 in both runs); `adaptiveThreshold` 1.9x faster, `GaussianBlur` 1.2x, `findContours` 1.1x, `resize` with INTER_AREA 1.1x; `resize` with INTER_LINEAR was 3.4x slower in this build.
-- **Architecture:** hybrid. The Lambda function (arm64) runs the same code with the stock wheel, because COOL ships as an AMI; the COOL path is an EC2 Graviton4 instance running the same backend. Lambda arm64 against x86_64 (stock OpenCV, 90 turns each) measured 207 ms against 215 ms and 22 % lower compute cost per 1000 turns (`benchmark.md`).
+- **Live COOL endpoint:** http://54.147.124.218/ (plain HTTP): the Sherpa web playground and API served from the COOL instance; `http://54.147.124.218/health` shows the OpenCV build that answers (`5.1.0-dev`, loaded from `/opt/cool`). The same code and the same access token and rate limit as the Lambda endpoint.
+- **Architecture:** hybrid. The Lambda function (arm64) runs the same code with the stock wheel, because COOL ships as an AMI; the COOL path is an EC2 Graviton4 instance running the same backend and serving the same API. Lambda arm64 against x86_64 (stock OpenCV, 90 turns each) measured 207 ms against 215 ms and 22 % lower compute cost per 1000 turns (`benchmark.md`).
 
 ![Graviton against x86 on AWS Lambda](img/graviton.png)
 

@@ -39,6 +39,14 @@ Individual operations on a 1080p frame (mean ms, 100 to 200 calls, run 1):
 
 The gain on the proposer is smaller than on `adaptiveThreshold` because the proposer also runs Python, morphology, Hough and contour tracing that COOL does not change, and because a single `resize` in COOL's INTER_LINEAR path was slower than stock in this build (one operation, reported as measured).
 
+## Live COOL endpoint
+
+The same Sherpa backend also runs on a COOL instance: `c8g.xlarge` (Graviton4), the COOL AMI above, a systemd service (`uvicorn` under COOL's Python 3.12, port 80, Elastic IP), the same access token and rate limit as the Lambda.
+
+- Playground and health: http://54.147.124.218/ and http://54.147.124.218/health. `/health` reports the OpenCV that answers: `"opencv": {"version": "5.1.0-dev", "path": "/opt/cool/python_3.12/site-packages/cv2/python-3.12"}`.
+- A real turn through it (a sample console screen, a live model on Nebius Token Factory) came back in 3.9 s with 74 regions; the OpenCV part of that first call took 985 ms (a cold first call) and warm calls are about 45 ms (benchmark above).
+- The URL is plain HTTP, kept up for the judging period.
+
 ## How this fits the deployment
 
 The deployed Lambda (`benchmark.md`) runs stock OpenCV 5.0.0.93 on Graviton (arm64). COOL ships as an AMI, so the COOL path is an EC2 Graviton4 instance running the same backend code; the two paths share one codebase and one contract, and the region proposer is the part that was measured on both.
