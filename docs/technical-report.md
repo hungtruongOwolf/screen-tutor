@@ -78,10 +78,11 @@ With a vaguely worded goal the first run completed 3 of 9. Most misses were vali
 
 **Graviton against x86** (`benchmark.md`): see the next section.
 
-### COOL / Graviton evidence
+### Graviton evidence (stock OpenCV 5, not COOL)
 
 ![Graviton against x86](img/graviton.png)
 
+- **Which OpenCV:** the standard `opencv-python-headless` 5.0.0.93 arm64 build from PyPI. The Cloud-Optimized OpenCV Library (COOL) is **not** used in this measurement, so this is evidence of OpenCV 5 on Graviton, not of COOL.
 - **What runs on Graviton:** the whole region proposer (every OpenCV pass above) on a Lambda arm64 function, 2048 MB, OpenCV 5.0.0.93, Python 3.11. The measurement uses a canned model, so the service time is the OpenCV work plus building the answer; no model call is in the number.
 - **Method:** six sample screens scaled to 1920 x 1080 and JPEG-encoded the way the app sends them; one first call, one warm-up round, then 15 rounds (90 timed turns) on each architecture; `tools/benchmark.py`, reproducible with `cdk deploy SherpaBenchmark -c benchmark=true`.
 - **Results:** mean service time 207 ms on arm64 against 215 ms on x86_64 (about 4 % faster); p95 262 ms against 273 ms; compute cost per 1000 turns 0.0057 against 0.0074 USD, **22 % cheaper**.
